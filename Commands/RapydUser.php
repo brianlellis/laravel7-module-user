@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Console\Commands;
+namespace App\Rapyd\Modules\User\Commands;
 
 use Carbon\Carbon;
 use Hash;
