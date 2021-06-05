@@ -11,9 +11,10 @@ class Usergroups extends Model
 {
     use \Swis\Laravel\Fulltext\Indexable;
 
-    protected $table = 'usergroups';
-    protected $guarded = [];
-    public $timestamps = false;
+    protected $connection = 'service_users';
+    protected $table      = 'usergroups';
+    protected $guarded    = [];
+    public $timestamps    = false;
 
     protected $indexContentColumns = [];
 
