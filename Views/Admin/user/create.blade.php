@@ -171,5 +171,5 @@ $all_user_roles = \Spatie\Permission\Models\Role::all();
       </div>
     </div>
   </form>
-  <script src="/admin_resources/admin/js/user_create.js"></script>
+  <script src="/modules/User/Resources/Admin/js/user_create.js"></script>
 @endcan

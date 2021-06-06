@@ -608,7 +608,7 @@ $all_user_roles = \Spatie\Permission\Models\Role::all();
     </div>
   </div>
 
-  <script src="/admin_resources/admin/js/user_profile.js"></script>
+  <script src="/modules/User/Resources/Admin/js/user_profile.js"></script>
   <script>
     function copy_principal_to_card() {
       document.getElementById(`billing_user_id`).value = {{ $user->id }};

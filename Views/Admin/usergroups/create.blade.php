@@ -238,5 +238,5 @@
   </div>
 </form>
 
-<script src="/admin_resources/admin/js/usergroups_create.js"></script>
+<script src="/modules/User/Resources/Admin/js/usergroups_create.js"></script>
 @endcan

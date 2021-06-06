@@ -946,7 +946,7 @@ $group_types = \DB::table('usergroup_types')->get();
 <script>
   const group = @json($usergroup);
 </script>
-<script src="/admin_resources/admin/js/usergroups_profile.js"></script>
+<script src="/modules/User/Resources/Admin/js/usergroups_profile.js"></script>
 <script>
   // START GUIDED TOUR
   @if ($tour_check) window.guideChimp.start(); @endif
