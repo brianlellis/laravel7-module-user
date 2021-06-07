@@ -11,5 +11,5 @@ return [
   'm_UsergroupType'     => Rapyd\Model\UsergroupType::class,
   'm_Roles'             => Spatie\Permission\Models\Role::class,
   'm_UserRoles'         => Rapyd\Model\UserRoles::class,
-  'm_UserPageVisits'    => Rapyd\Model\m_UserPageVisits::class,
+  'm_UserPageVisits'    => Rapyd\Model\UserPageVisits::class,
 ];
