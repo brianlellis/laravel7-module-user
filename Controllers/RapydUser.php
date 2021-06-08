@@ -16,6 +16,20 @@ use Illuminate\Support\Facades\Auth;
 
 class RapydUser extends Controller
 {
+  public static function address_by_ip()
+  { 
+    $url = 'http://ip-api.com/php/172.73.166.53';
+    // $url = 'http://ip-api.com/php/'.request()->ip();
+    $ch = curl_init();
+    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+    curl_setopt($ch,CURLOPT_URL,$url);
+    curl_setopt($ch,CURLOPT_RETURNTRANSFER,1);
+    $data = curl_exec($ch);
+    curl_close($ch);
+
+    return unserialize($data);
+  }
+
   /**
    * Display a listing of the resource.
    *
