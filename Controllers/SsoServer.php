@@ -7,11 +7,7 @@ use Jasny\SSO\Server as JasnyServer;
 
 abstract class SsoServer extends JasnyServer
 {
-  /**
-   * Class constructor
-   *
-   * @param array $options
-   */
+  // Class constructor
   public function __construct(CacheManager $cache, array $options = [])
   {
     parent::__construct($options);
@@ -25,9 +21,7 @@ abstract class SsoServer extends JasnyServer
     if (session_status() !== PHP_SESSION_ACTIVE) session_start();
   }
 
-  /**
-   * Ouput user information as json.
-   */
+  // Ouput user information as json.
   public function userInfo()
   {
     $this->startBrokerSession();

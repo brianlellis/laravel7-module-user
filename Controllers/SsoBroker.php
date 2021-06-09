@@ -31,9 +31,7 @@ class SsoBroker extends JasnyBroker
     }
   }
 
-  /**
-   * Generate session token
-   */
+  // Generate session token
   public function generateToken()
   {
     if (isset($this->token)) {
@@ -119,9 +117,7 @@ class SsoBroker extends JasnyBroker
     return $data;
   }
 
-  /**
-   * Clears session token
-   */
+  // Clears session token
   public function clearToken()
   {
     \Cookie::queue(

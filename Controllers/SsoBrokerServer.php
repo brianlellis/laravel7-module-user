@@ -15,13 +15,7 @@ class SsoBrokerServer extends SsoServer
     '2' => 'secret2'
   ];
 
-  /**
-   * Authenticate using user credentials
-   *
-   * @param string $username
-   * @param string $password
-   * @return \Jasny\ValidationResult
-   */
+  // Authenticate using user credentials
   protected function authenticate($username, $password)
   {
     if (!\Auth::guard('web')->validate(['email' => $username, 'password' => $password])) {
@@ -31,12 +25,7 @@ class SsoBrokerServer extends SsoServer
     return ValidationResult::success();
   }
 
-  /**
-   * Get the secret key and other info of a broker
-   *
-   * @param string $brokerId
-   * @return array
-   */
+  // Get the secret key and other info of a broker
   protected function getBrokerInfo($brokerId)
   {
     return !array_key_exists($brokerId, $this->brokers) ? null : [
@@ -45,12 +34,7 @@ class SsoBrokerServer extends SsoServer
     ];
   }
 
-  /**
-   * Get the information about a user
-   *
-   * @param string $username
-   * @return array|object
-   */
+  // Get the information about a user
   protected function getUserInfo($username)
   {
     $user = User::whereEmail($username)->first();
