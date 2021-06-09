@@ -4,6 +4,10 @@ return [
   //----------- CONTROLLERS
   'RapydUser'           => Rapyd\RapydUser::class,
   'RapydUsergroups'     => Rapyd\RapydUsergroups::class,
+  'SsoServer'           => Rapyd\Sso\SsoServer::class,
+  'SsoBroker'           => Rapyd\Sso\SsoBroker::class,
+  'SsoBrokerServer'     => Rapyd\Sso\SsoBrokerServer::class,
+
 
   //----------- MODELS
   'm_Usergroups'        => Rapyd\Model\Usergroups::class,
