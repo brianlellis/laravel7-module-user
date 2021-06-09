@@ -1,13 +1,11 @@
 <?php
 
-
 namespace Rapyd\Sso;
 
-use Rapyd\Sso\SsoServer;
 use Jasny\ValidationResult;
 use App\Models\User;
 
-class SsoBrokerServer extends SsoServer
+class SsoBrokerServer
 {
   // Consider changing to DB value
   private $brokers = [

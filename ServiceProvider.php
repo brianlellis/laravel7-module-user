@@ -1,14 +1,14 @@
 <?php
 
 
-namespace Rapyd\Sso;
+namespace Rapyd;
 
 use CodeEdu\LaravelSso\Guard\SsoGuard;
 use CodeEdu\LaravelSso\Sso\Broker;
 use Illuminate\Http\Request;
 use Illuminate\Support\ServiceProvider;
 
-class SSOServiceProvider extends ServiceProvider
+class UserServiceProvider extends ServiceProvider
 {
   /**
    * Register bindings in the container.
