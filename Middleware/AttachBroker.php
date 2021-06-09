@@ -16,7 +16,7 @@ class AttachBroker
    */
   public function handle($request, Closure $next)
   {
-    $broker = app(Broker::class);
+    $broker = new \SsoBroker();
     $redirect = $broker->attach(true);
     if ($redirect) {
       return $redirect;
