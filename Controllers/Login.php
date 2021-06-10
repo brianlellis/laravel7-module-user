@@ -36,6 +36,7 @@ class Login
     {
       $cur_session_id = \Session::getId();
       \m_SessionShare::where('session_id',$cur_session_id)->delete();
+      \Session::forget('session_share_set');
       
       \DB::connection('service_users')->table('sessions')
         ->where('id',$cur_session_id)->delete();
