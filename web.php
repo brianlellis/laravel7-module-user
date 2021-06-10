@@ -40,7 +40,7 @@ Route::get('/api/findanewsletter', function() {
 //--------------- LOGIN
 Route::get('login', ['as' => 'login', function () {
 	if (Auth::user()) {
-		return redirect('/admin/dashboard');
+		return redirect(request()->getSchemeAndHttpHost().'/admin/dashboard');
 	}
 
 	// GET BLADE INFORMATION

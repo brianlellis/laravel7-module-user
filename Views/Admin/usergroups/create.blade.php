@@ -231,7 +231,7 @@
         </div>
       </div>
       <div class="card-footer">
-        <a href="/admin/user/dashboard" class="btn btn-danger mt-1">Cancel</a>
+        <a href="@url('admin/user/dashboard')" class="btn btn-danger mt-1">Cancel</a>
         <button type="submit" class="btn btn-success mt-1">Save</button>
       </div>
     </div>

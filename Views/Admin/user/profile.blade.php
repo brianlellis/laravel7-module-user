@@ -26,33 +26,33 @@ $all_user_roles = \Spatie\Permission\Models\Role::all();
     </div>
 
     <div class="card-body">
-      <a href="/api/users/gamify/addpoint/{{ $user->id }}/bondedit" class="btn btn-primary"
+      <a href="@url('/api/users/gamify/addpoint/'){{ $user->id }}/bondedit" class="btn btn-primary"
         style="margin-bottom: 10px">
         Add Bond Edit Points
       </a>
-      <a href="/api/users/gamify/undopoint/{{ $user->id }}/bondedit" class="btn btn-primary"
+      <a href="@url('/api/users/gamify/undopoint/'){{ $user->id }}/bondedit" class="btn btn-primary"
         style="margin-bottom: 10px">
         Remove Bond Edit Points
       </a>
 
-      <a href="/api/users/gamify/addpoint/{{ $user->id }}/formupload" class="btn btn-primary"
+      <a href="@url('/api/users/gamify/addpoint/'){{ $user->id }}/formupload" class="btn btn-primary"
         style="margin-bottom: 10px">
         Add Form Upload Points
       </a>
-      <a href="/api/users/gamify/undopoint/{{ $user->id }}/formupload" class="btn btn-primary"
+      <a href="@url('/api/users/gamify/undopoint/'){{ $user->id }}/formupload" class="btn btn-primary"
         style="margin-bottom: 10px">
         Remove Form Upload Points
       </a>
 
-      <a href="/api/users/gamify/addpoint/{{ $user->id }}/article" class="btn btn-primary"
+      <a href="@url('/api/users/gamify/addpoint/'){{ $user->id }}/article" class="btn btn-primary"
         style="margin-bottom: 10px">
         Add Article Submission Points
       </a>
-      <a href="/api/users/gamify/undopoint/{{ $user->id }}/article" class="btn btn-primary"
+      <a href="@url('/api/users/gamify/undopoint/'){{ $user->id }}/article" class="btn btn-primary"
         style="margin-bottom: 10px">
         Remove Article Submission Points
       </a>
-      <a href="/api/core-pdf/zero/pdfdownloads/{{ $user->id }}" class="btn btn-primary"
+      <a href="@url('/api/core-pdf/zero/pdfdownloads/'){{ $user->id }}" class="btn btn-primary"
         style="margin-bottom: 10px">
         Reset PDF Downloads to Zero
       </a>
@@ -74,7 +74,7 @@ $all_user_roles = \Spatie\Permission\Models\Role::all();
               <h3 class="mb-2 username text-dark">{{ $user->name_first }} {{ $user->name_last }}</h3>
 
               {{-- NOTE: PART OF USER GROUPS TO BE WORKED ON --}}
-              {{-- <a class="mb-2 text-dark" href="/admin/user/group-profile">Ellis
+              {{-- <a class="mb-2 text-dark" href="@url('admin/user/group-profile')">Ellis
         Insurance</a> --}}
 
               {{-- STAR RATING --}}
@@ -187,7 +187,7 @@ $all_user_roles = \Spatie\Permission\Models\Role::all();
                       <strong>Name on Card</strong><br>
                       {{ $user->name_first }} {{ $user->name_last }}<br>
 
-                      <a href="/api/paymentgateway/authnet/removepaymentmethod/{{ $user->authnet_id }}/{{ $card_details['payment_id'] }}"
+                      <a href="@url('/api/paymentgateway/authnet/removepaymentmethod/'){{ $user->authnet_id }}/{{ $card_details['payment_id'] }}"
                         class="btn btn-primary btn-sm">Remove Card</a>
                     @else
                       <input type="hidden" value="{{ $bank_info['payment_id'] }}" />
@@ -199,7 +199,7 @@ $all_user_roles = \Spatie\Permission\Models\Role::all();
                       <strong>Routing Number</strong><br>
                       {{ $bank_info['route'] }}<br>
 
-                      <a href="/api/paymentgateway/authnet/removepaymentmethod/{{ $user->authnet_id }}/{{ $bank_info['payment_id'] }}"
+                      <a href="@url('/api/paymentgateway/authnet/removepaymentmethod/'){{ $user->authnet_id }}/{{ $bank_info['payment_id'] }}"
                         class="btn btn-primary btn-sm">Remove Bank</a>
                     @endif
                   </div>
@@ -309,7 +309,7 @@ $all_user_roles = \Spatie\Permission\Models\Role::all();
                 <div id="agency_list_wrapper">
                   @if ($user->usergroup->first())
                     <a type="text" class="mr-2 text-primary"
-                      href="/admin/usergroups/profile?group={{ $user->usergroup->first()->id }}">{{ $user->usergroup->first()->name }}</a>
+                      href="@url('/admin/usergroups/profile?group='){{ $user->usergroup->first()->id }}">{{ $user->usergroup->first()->name }}</a>
                   @endif
                 </div>
               </div>
@@ -419,7 +419,7 @@ $all_user_roles = \Spatie\Permission\Models\Role::all();
                         <p class="mt-1 ml-2">On</p>
                       </div>
                       <p class="mt-1 ml-4">
-                        <a href="/agent/profile/{{ $user->page_url_slug }}" class="mr-2">View
+                        <a href="@url('/agent/profile/'){{ $user->page_url_slug }}" class="mr-2">View
                           My Public Profile</a>
                       </p>
                     </div>
@@ -461,7 +461,7 @@ $all_user_roles = \Spatie\Permission\Models\Role::all();
           <div class="card-footer">
             <button id="save_edited_profile" class="mt-1 btn btn-success">Save</button>
             <a href="#" class="mt-1 btn btn-danger" onclick="editProfile()">Cancel</a>
-            <button class="mt-1 btn btn-danger" href="/api/user/delete/{{ $user->id }}">Remove</button>
+            <button class="mt-1 btn btn-danger" href="@url('/api/user/delete/'){{ $user->id }}">Remove</button>
           </div>
         </div>
       </form>

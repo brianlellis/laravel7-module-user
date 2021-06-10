@@ -26,7 +26,7 @@
       </form>
     </div>
     <div class="col-8">
-      <a href="/admin/user/dashboard" class="btn btn-primary">Clear Filters</a>
+      <a href="@url('admin/user/dashboard')" class="btn btn-primary">Clear Filters</a>
     </div>
   </div>
 
@@ -52,7 +52,7 @@
           </td>
           <td class="d-flex">
             @can('user-update')
-              <a class="btn btn-sm btn-primary mr-2 font-weight-bold" href="/admin/user/profile?user_id={{$user->id}}">Edit</a>
+              <a class="btn btn-sm btn-primary mr-2 font-weight-bold" href="@url('/admin/user/profile?user_id='){{$user->id}}">Edit</a>
               <form action="/api/user/delete/{{$user->id}}" onsubmit="return confirm('Are you sure  you want to delete {{$user->email}}?');">
                 <input class="btn btn-sm btn-danger font-weight-bold" type="submit" value="Remove"/>
               </form>

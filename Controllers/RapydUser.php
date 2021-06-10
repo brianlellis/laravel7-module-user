@@ -92,7 +92,7 @@ class RapydUser extends Controller
     // Create User Avatar
     $user->create_avatar();
 
-    return redirect('/admin/user/dashboard')->with('success', 'User created successfully');
+    return redirect(request()->getSchemeAndHttpHost().'/admin/user/dashboard')->with('success', 'User created successfully');
   }
 
   /**
@@ -212,7 +212,7 @@ class RapydUser extends Controller
       );
     }
 
-    return redirect('/login')->with(['password_reset' => 'requested']);
+    return redirect(request()->getSchemeAndHttpHost().'/login')->with(['password_reset' => 'requested']);
   }
 
   // Verify User Reset Token And Update Password
@@ -234,13 +234,13 @@ class RapydUser extends Controller
       Auth::login($user);
     }
 
-    return redirect('/admin/dashboard');
+    return redirect(request()->getSchemeAndHttpHost().'/admin/dashboard');
   }
 
   public function destroy($user_id)
   {
     User::find($user_id)->delete();
-    return redirect('/admin/user/dashboard')->with('success', 'User removed successfully');
+    return redirect(request()->getSchemeAndHttpHost().'/admin/user/dashboard')->with('success', 'User removed successfully');
   }
 
   public function avatar(Request $request)

@@ -49,10 +49,10 @@
         </td>
         <td>
           @can('sys-user-permission-update')
-            <a class="btn btn-sm btn-primary font-weight-bold" href="/admin/user/permissions/edit?permission_id={{$permission->id}}">Edit</a>
+            <a class="btn btn-sm btn-primary font-weight-bold" href="@url('/admin/user/permissions/edit?permission_id='){{$permission->id}}">Edit</a>
           @endcan
           @can('sys-user-permission-delete')
-            <a class="btn btn-sm btn-danger font-weight-bold" href="/api/user/permissions/delete/{{$permission->id}}">Remove</a>
+            <a class="btn btn-sm btn-danger font-weight-bold" href="@url('/api/user/permissions/delete/'){{$permission->id}}">Remove</a>
           @endcan
         </td>
       </tr>

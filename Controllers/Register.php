@@ -81,7 +81,7 @@ class Register
       if($request->custom_route) {
         return redirect($request->custom_route)->with('success','User successfully added');
       } else {
-        return redirect('/registration-awaiting-approval');
+        return redirect(request()->getSchemeAndHttpHost().'/registration-awaiting-approval');
       }
     } else {
       // ROLENAME
@@ -102,7 +102,7 @@ class Register
       if($request->custom_route) {
         return redirect($request->custom_route)->with('success','User successfully added');
       } else {
-        return redirect('/registration-success');
+        return redirect(request()->getSchemeAndHttpHost().'/registration-success');
       }
     }
 
@@ -177,6 +177,6 @@ class Register
   public function verify_email($hashdash)
   {
     User::find($hashdash)->markEmailAsVerified();
-    return redirect('/')->with('success', 'You have succesfully confirmed your email and may now login');
+    return redirect(request()->getSchemeAndHttpHost().'/')->with('success', 'You have succesfully confirmed your email and may now login');
   }
 }

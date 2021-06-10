@@ -27,7 +27,7 @@
       </form>
     </div>
     <div class="col-8">
-      <a href="/admin/usergroups/dashboard" class="btn btn-primary">Clear Filters</a>
+      <a href="@url('admin/usergroups/dashboard')" class="btn btn-primary">Clear Filters</a>
     </div>
   </div>
 
@@ -56,7 +56,7 @@
               <div class="mr-2">
                 <a
                   class="btn btn-sm btn-primary font-weight-bold"
-                  href="/admin/usergroups/profile?group={{$usergroup->id}}"
+                  href="@url('/admin/usergroups/profile?group='){{$usergroup->id}}"
                 >
                   View
                 </a>

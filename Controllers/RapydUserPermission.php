@@ -48,7 +48,7 @@ class RapydUserPermission extends Controller
         );
       }
 
-      return redirect('/admin/user/permissions/dashboard')->with('success', 'Permission successfully created');
+      return redirect(request()->getSchemeAndHttpHost().'/admin/user/permissions/dashboard')->with('success', 'Permission successfully created');
     }
 
     public function update(Request $request)
@@ -71,7 +71,7 @@ class RapydUserPermission extends Controller
           );
         }
 
-        return redirect('/admin/user/permissions/dashboard')->with('success','Permission updated successfully');
+        return redirect(request()->getSchemeAndHttpHost().'/admin/user/permissions/dashboard')->with('success','Permission updated successfully');
     }
 
     public function delete($permission_id)

@@ -83,7 +83,7 @@ class RapydUsergroups extends Controller
         $usergroup  = Usergroups::create($this->make_group($request));
         $usergroup->get_coordinates();
 
-        return redirect('/admin/usergroups/dashboard')->with('success','Usergroup created successfully');
+        return redirect(request()->getSchemeAndHttpHost().'/admin/usergroups/dashboard')->with('success','Usergroup created successfully');
     }
 
     /**
@@ -111,7 +111,7 @@ class RapydUsergroups extends Controller
 
         \FullText::reindex_record('\\Rapyd\\Model\\Usergroups', $usergroup->id);
 
-        return redirect('/admin/usergroups/dashboard')->with('success','Usergroup updated successfully');
+        return redirect(request()->getSchemeAndHttpHost().'/admin/usergroups/dashboard')->with('success','Usergroup updated successfully');
     }
 
     /**
@@ -123,7 +123,7 @@ class RapydUsergroups extends Controller
     public function destroy(Usergroups $usergroup)
     {
         $usergroup->delete();
-        return redirect('/admin/usergroups/dashboard')->with('success','Usergroup deleted successfully');
+        return redirect(request()->getSchemeAndHttpHost().'/admin/usergroups/dashboard')->with('success','Usergroup deleted successfully');
     }
 
     public function make_group($request)

@@ -24,7 +24,7 @@ class RapydUserRole extends Controller
 
       Role::create(['name' => $request->role_name]);
 
-      return redirect('/admin/user/roles/dashboard')->with('success', 'User Role successfully created');
+      return redirect(request()->getSchemeAndHttpHost().'/admin/user/roles/dashboard')->with('success', 'User Role successfully created');
     }
 
     public function update(Request $request)

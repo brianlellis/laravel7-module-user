@@ -26,10 +26,10 @@
       <td>{{$role->name}}</td>
       <td class="text-right">
         @can('sys-user-role-update')
-          <a class="btn btn-primary btn-sm font-weight-bold" href="/admin/user/roles/edit?role_id={{$role->id}}">Edit</a>
+          <a class="btn btn-primary btn-sm font-weight-bold" href="@url('/admin/user/roles/edit?role_id='){{$role->id}}">Edit</a>
         @endcan
         @can('sys-user-role-delete')
-          <a class="btn btn-danger btn-sm font-weight-bold" href="/api/user/role/delete/{{$role->id}}">Remove</a>
+          <a class="btn btn-danger btn-sm font-weight-bold" href="@url('/api/user/role/delete/'){{$role->id}}">Remove</a>
         @endcan
       </td>
     </tr>

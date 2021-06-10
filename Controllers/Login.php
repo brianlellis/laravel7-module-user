@@ -22,7 +22,7 @@ class Login
         // Authentication passed...
         return redirect()->intended('/admin/dashboard');
       } else {
-				return redirect('/login')
+				return redirect(request()->getSchemeAndHttpHost().'/login')
 				->withErrors(
 					[
 						'email' 		=> 'Make Sure Your Email Is Correct',
@@ -42,6 +42,6 @@ class Login
         ->where('id',$cur_session_id)->delete();
 
       Auth::logout();
-      return redirect('/');
+      return redirect(request()->getSchemeAndHttpHost().'/');
     }
 }

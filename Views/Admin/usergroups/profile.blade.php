@@ -72,19 +72,19 @@ $group_types = \DB::table('usergroup_types')->get();
         {{-- CHECK FOR producer_agreement_ip ELSE Deactivate / Activate Usergroup --}}
         @if ($usergroup->producer_agreement_ip)
           @if ($usergroup->is_active)
-            <a href="/api/usergroup/deactivate/{{ $usergroup->id }}" class="btn btn-primary pull-right">
+            <a href="@url('/api/usergroup/deactivate/'){{ $usergroup->id }}" class="btn btn-primary pull-right">
               Deactivate Agency
             </a>
           @else
-            <a href="/api/usergroup/activate/{{ $usergroup->id }}" class="btn btn-primary pull-right">
+            <a href="@url('/api/usergroup/activate/'){{ $usergroup->id }}" class="btn btn-primary pull-right">
               Activate Agency
             </a>
           @endif
         @else
-          <a href="/api/usergroup/producer/override/{{ $usergroup->id }}" class="btn btn-danger pull-right mb-4 ml-2">
+          <a href="@url('/api/usergroup/producer/override/'){{ $usergroup->id }}" class="btn btn-danger pull-right mb-4 ml-2">
             Override Producer Agreement
           </a>
-          <a href="/api/usergroup/producer/send/{{ $usergroup->id }}" class="btn btn-primary pull-right mb-4">
+          <a href="@url('/api/usergroup/producer/send/'){{ $usergroup->id }}" class="btn btn-primary pull-right mb-4">
             Send Producer Agreement
           </a>
         @endif
@@ -419,7 +419,7 @@ $group_types = \DB::table('usergroup_types')->get();
                   <div class="card-body">
                     @foreach ($usergroup->users as $user)
                       <div class="agent-content {{auth()->user()->id === $user->id ? 'own-user' : null}}">
-                        <a href="/admin/user/profile?user_id={{ $user->id }}" target="_blank">
+                        <a href="@url('/admin/user/profile?user_id='){{ $user->id }}" target="_blank">
                           {{ $user->name_last }}, {{ $user->name_first }}<br>
                         </a>
                         @if (auth()->user()->id !== $user->id)
@@ -531,7 +531,7 @@ $group_types = \DB::table('usergroup_types')->get();
                         </div>
                       </div>
                       <div class="card-footer">
-                        <a href="/admin/user/dashboard" class="btn btn-danger mt-1">Cancel</a>
+                        <a href="@url('admin/user/dashboard')" class="btn btn-danger mt-1">Cancel</a>
                         <button type="submit" class="btn btn-success mt-1">Save</button>
                       </div>
                     </div>
@@ -609,15 +609,15 @@ $group_types = \DB::table('usergroup_types')->get();
                                 <td>
                                   @if ($policy->js_spa_history && $policy->status->id < 5)
                                     <div class="btn-group" role="group">
-                                      <a target="_blank" @if (auth()->user()->hasanyrole('Developer|Underwriter')) href="/admin/bond/policies/edit?policy_id={{ $policy->id }}"
+                                      <a target="_blank" @if (auth()->user()->hasanyrole('Developer|Underwriter')) href="@url('/admin/bond/policies/edit?policy_id='){{ $policy->id }}"
                                   @else
-                                        href="/bondquote?key={{ $policy->access_key }}" @endif title="History"
+                                        href="@url('/bondquote?key='){{ $policy->access_key }}" @endif title="History"
                                         class="btn btn-sm btn-primary history">
                                         Edit
                                       </a>
                                     </div>
                                   @else
-                                    <a href="/admin/agent/view-policy?key={{ $policy->access_key }}"
+                                    <a href="@url('/admin/agent/view-policy?key='){{ $policy->access_key }}"
                                       title="View Policy"
                                       class="btn btn-sm btn-success history">
                                       View
@@ -700,7 +700,7 @@ $group_types = \DB::table('usergroup_types')->get();
                                     class="payment payment-{{ strtolower($card_details['type']) }}"></i><br>
                                   {{ $card_details['last4'] }}<br>
 
-                                  <a href="/api/paymentgateway/authnet/removepaymentmethod/{{ $usergroup->authnet_id }}/{{ $card_details['payment_id'] }}"
+                                  <a href="@url('/api/paymentgateway/authnet/removepaymentmethod/'){{ $usergroup->authnet_id }}/{{ $card_details['payment_id'] }}"
                                     class="btn btn-primary btn-sm">Remove Card</a>
                                 @else
                                   <input type="hidden"
@@ -714,7 +714,7 @@ $group_types = \DB::table('usergroup_types')->get();
                                   <strong>Routing Number</strong><br>
                                   {{ $bank_info['route'] }}<br>
 
-                                  <a href="/api/paymentgateway/authnet/removepaymentmethod/{{ $usergroup->authnet_id }}/{{ $bank_info['payment_id'] }}"
+                                  <a href="@url('/api/paymentgateway/authnet/removepaymentmethod/'){{ $usergroup->authnet_id }}/{{ $bank_info['payment_id'] }}"
                                     class="btn btn-primary btn-sm">Remove Bank</a>
                                 @endif
                               </div>
@@ -780,7 +780,7 @@ $group_types = \DB::table('usergroup_types')->get();
                                       class="payment payment-{{ strtolower($card_details['type']) }}"></i><br>
                                     {{ $card_details['last4'] }}<br>
 
-                                    <a href="/api/paymentgateway/authnet/removepaymentmethod/{{ $user->authnet_id }}/{{ $card_details['payment_id'] }}"
+                                    <a href="@url('/api/paymentgateway/authnet/removepaymentmethod/'){{ $user->authnet_id }}/{{ $card_details['payment_id'] }}"
                                       class="btn btn-primary btn-sm">Remove Card</a>
                                   @else
                                     {{-- BANK ACCOUNT INFO --}}
@@ -790,7 +790,7 @@ $group_types = \DB::table('usergroup_types')->get();
                                     <strong>Routing Number</strong><br>
                                     {{ $bank_info['route'] }}<br>
 
-                                    <a href="/api/paymentgateway/authnet/removepaymentmethod/{{ $user->authnet_id }}/{{ $bank_info['payment_id'] }}"
+                                    <a href="@url('/api/paymentgateway/authnet/removepaymentmethod/'){{ $user->authnet_id }}/{{ $bank_info['payment_id'] }}"
                                       class="btn btn-primary btn-sm">Remove Bank</a>
                                   @endif
                                 </div>
