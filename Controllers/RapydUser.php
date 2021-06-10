@@ -29,11 +29,7 @@ class RapydUser extends Controller
     return unserialize($data);
   }
 
-  /**
-   * Display a listing of the resource.
-   *
-   * @return \Illuminate\Http\Response
-   */
+  // Display a listing of the resource.
   public static function get_users($order_by = false, $order_sort = false, $role = false)
   {
     if($role) {
@@ -52,12 +48,7 @@ class RapydUser extends Controller
     return $data;
   }
 
-  /**
-   * Store a newly created resource in storage.
-   *
-   * @param  \Illuminate\Http\Request  $request
-   * @return \Illuminate\Http\Response
-   */
+  // Store a newly created resource in storage.
   public function store(Request $request)
   {
     $validator = $this->validate($request, [
@@ -80,39 +71,21 @@ class RapydUser extends Controller
 
     $user = User::create($input);
 
-    // Allow User To Create Password
     $this->requestResetPassword($request);
-
-    // User Role
     $user->syncRoles($request->role_name);
-
-    // Get User Address For Google Map
     $user->get_coordinates();
-
-    // Create User Avatar
-    $user->create_avatar();
 
     return redirect(request()->getSchemeAndHttpHost().'/admin/user/dashboard')->with('success', 'User created successfully');
   }
 
-  /**
-   * Display the specified resource.
-   *
-   * @param  int  $id
-   * @return \Illuminate\Http\Response
-   */
+  // Display the specified resource.
   public static function show($user_id)
   {
     return User::find($user_id);
   }
 
 
-  /**
-   * Show the form for editing the specified resource.
-   *
-   * @param  int  $id
-   * @return \Illuminate\Http\Response
-   */
+  // Show the form for editing the specified resource.
   public function edit($id)
   {
     $user = User::find($id);
@@ -123,13 +96,7 @@ class RapydUser extends Controller
   }
 
 
-  /**
-   * Update the specified resource in storage.
-   *
-   * @param  \Illuminate\Http\Request  $request
-   * @param  int  $id
-   * @return \Illuminate\Http\Response
-   */
+  // Update the specified resource in storage.
   public function update(Request $request)
   {
     $validator = $this->validate($request, [
