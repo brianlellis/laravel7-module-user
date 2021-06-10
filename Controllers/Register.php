@@ -28,7 +28,7 @@ class Register
   public function create_user(Request $request)
   {
     $data = $request->validate([
-      'email'             => 'required|email|unique:users',
+      'email'             => 'required|email|unique:\App\User,email',
       'name_first'        => 'required',
       'name_last'         => 'required',
       'password'          => 'nullable',
@@ -57,7 +57,6 @@ class Register
 
     $user = User::create($data);
     $user->get_coordinates();
-    $user->create_avatar();
 
     // USERGROUP
     if ($request->usergroup_id) {
@@ -152,7 +151,6 @@ class Register
     $user_group->users()->attach($user->id);
     $user_group->get_coordinates();
     $user->get_coordinates();
-    $user->create_avatar();
     $user->assignRole('Agent');
     \FullText::reindex_record('\\App\\User', $user->id);
 
