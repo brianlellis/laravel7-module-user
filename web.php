@@ -7,6 +7,7 @@ Route::get('/api/needanewsletter', function() {
   $session    = \m_SessionShare::where('client_id',$client_id)->first();
 
   if (!$session) {
+    \Session::put('session_share_start', true);
     \m_SessionShare::insert([
       'client_id'   => $client_id,
       'session_id'  => $session_id,
@@ -34,7 +35,7 @@ Route::get('/api/findanewsletter', function() {
     \Session::put('session_share_set', true);
     return 'found';
   } else {
-    return 'no';
+    return 'no: '.$client_id;
   }
 });
 
