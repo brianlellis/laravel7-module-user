@@ -28,9 +28,9 @@ class Register
   public function create_user(Request $request)
   {
     $data = $request->validate([
-      'email'             => 'exists:App\User,required|email|unique:users',
-      'name_first'        => 'exists:App\User,required',
-      'name_last'         => 'exists:App\User,required',
+      'email'             => 'required|email|unique:App\User.users',
+      'name_first'        => 'required',
+      'name_last'         => 'required',
       'password'          => 'nullable',
       'phone_main'        => 'nullable',
       'address_street'    => 'nullable',
