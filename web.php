@@ -1,5 +1,15 @@
 <?php
 
+//--------------- Sessions Sharing
+Route::get('setcookie', function(){
+  if (\SettingsSite::get('system_use_sso') == 'on' && !session('sso_sharing') {
+    Session::setId($_GET['id']);
+    Session::start();
+    header('P3P: CP="This is not a policy"');
+    return 'Cookie created';
+  }
+});
+
 //--------------- LOGIN
 Route::get('login', ['as' => 'login', function () {
 	if (Auth::user()) {
