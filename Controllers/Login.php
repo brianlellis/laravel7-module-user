@@ -20,7 +20,7 @@ class Login
 
       if (Auth::attempt($credentials)) {
         // Authentication passed...
-        return redirect()->intended('/admin/dashboard');
+        return redirect(request()->getSchemeAndHttpHost().'/admin/dashboard');
       } else {
 				return redirect(request()->getSchemeAndHttpHost().'/login')
 				->withErrors(
