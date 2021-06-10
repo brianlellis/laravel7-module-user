@@ -1,13 +1,11 @@
 <?php
 
-//--------------- Sessions Sharing
-Route::get('setcookie', function(){
-  if (\SettingsSite::get('system_use_sso') == 'on' && !session('sso_sharing')) {
-    Session::setId($_GET['id']);
-    Session::start();
-    header('P3P: CP="This is not a policy"');
-    return 'Cookie created';
-  }
+//--------------- SESSION CHECKER
+Route::get('/api/sessionchecker/{client_id}', function($client_id) {
+  $session = \m_SessionShare::where('client_id',$client_id)->first();
+  Session::setId($session->session_id);
+  Session::start();
+  return 'session checked';
 });
 
 //--------------- LOGIN

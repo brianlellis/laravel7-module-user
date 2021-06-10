@@ -34,6 +34,9 @@ class Login
 
     public function logout()
     {
+      $cur_session_id = Session::getId();
+      \m_SessionShare::where('session_id',$cur_session_id)->delete();
+      request()->session()->regenerate();
       Auth::logout();
       return redirect('/');
     }
