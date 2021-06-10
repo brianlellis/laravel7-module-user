@@ -52,7 +52,7 @@ class RapydUsergroups extends Controller
 
     public static function remove_user($group_id, $user_id)
     {
-        \DB::table('usergroup_users')->where('usergroup_id',$group_id)->where('user_id',$user_id)->delete();
+        \DB::connection('service_users')->table('usergroup_users')->where('usergroup_id',$group_id)->where('user_id',$user_id)->delete();
 
         return back()->with('success', 'User removed from group');
     }
