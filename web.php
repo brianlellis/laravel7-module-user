@@ -1,12 +1,43 @@
 <?php
 
 //--------------- SESSION CHECKER
-Route::get('/api/sessionchecker/{client_id}', function($client_id) {
-  $session = \m_SessionShare::where('client_id',$client_id)->first();
-  Session::setId($session->session_id);
-  Session::start();
-  return 'session checked';
+Route::get('/api/needanewsletter', function() {
+  $client_id  = request()->get('visit');
+  $session_id = request()->get('campaign');
+  $session    = \m_SessionShare::where('client_id',$client_id)->first();
+
+  if (!$session) {
+    \m_SessionShare::insert([
+      'client_id'   => $client_id,
+      'session_id'  => $session_id,
+      'ip'          => request()->ip()
+    ]);
+  }
 });
+
+Route::get('/api/findanewsletter', function() {
+  // WAS ATTEMPTING TO REMOVE ARTIFACT SESSION ID BUT
+  // STUCK IN INFINITE LOOP
+  // if (!\Session::get('session_share_set')) {
+  //   $cur_session_id = \Session::getId();
+  //   \DB::connection('service_users')->table('sessions')
+  //       ->where('id',$cur_session_id)->delete();
+  // }
+
+  $client_id  = request()->get('visit');
+  $session    = \m_SessionShare::where('client_id',$client_id)
+                  ->where('ip',request()->ip())->first();
+
+  if ($session) {
+    \Session::setId($session->session_id);
+    \Session::start();
+    \Session::put('session_share_set', true);
+    return 'found';
+  } else {
+    return 'no';
+  }
+});
+
 
 //--------------- LOGIN
 Route::get('login', ['as' => 'login', function () {
