@@ -17,19 +17,16 @@ Route::get('/api/needanewsletter', function() {
 });
 
 Route::get('/api/findanewsletter', function() {
-  // WAS ATTEMPTING TO REMOVE ARTIFACT SESSION ID BUT
-  // STUCK IN INFINITE LOOP
-  // if (!\Session::get('session_share_set')) {
-  //   $cur_session_id = \Session::getId();
-  //   \DB::connection('service_users')->table('sessions')
-  //       ->where('id',$cur_session_id)->delete();
-  // }
-
   $client_id  = request()->get('visit');
   $session    = \m_SessionShare::where('client_id',$client_id)
                   ->where('ip',request()->ip())->first();
 
   if ($session) {
+    // REMOVE ARTIFACT SESSION ID
+    $cur_session_id = \Session::getId();
+    \DB::connection('service_users')->table('sessions')
+        ->where('id',$cur_session_id)->delete();
+
     \Session::setId($session->session_id);
     \Session::start();
     \Session::put('session_share_set', true);
