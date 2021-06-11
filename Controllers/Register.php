@@ -158,7 +158,7 @@ class Register
       $user['event_mail_subject'] = "User Blocked";
       \RapydEvents::send_mail('user_registered_blocked_system', 'sitewide_notification_emails', $user);
 
-      $user['event_mail_subject'] = "BondExchange Registration Fail";
+      $user['event_mail_subject'] = "Registration Fail";
       \RapydEvents::send_mail('user_registered_blocked', false, $user);
 
       return ['success' => false, 'msg' => 'Email Domain Has Been Blocked'];
