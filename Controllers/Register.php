@@ -71,10 +71,10 @@ class Register
         $user->assignRole('Unapproved User');
       }
 
-      $user['event_mail_subject'] = "User Blocked";
+      $user['event_mail_subject'] = \SettingsSite::get('sitewide_title')." User Blocked";
       \RapydEvents::send_mail('user_registered_blocked_system', 'sitewide_notification_emails', $user);
 
-      $user['event_mail_subject'] = "BondExchange Registration Fail";
+      $user['event_mail_subject'] = \SettingsSite::get('sitewide_title')." Registration Fail";
       \RapydEvents::send_mail('user_registered_blocked', false, $user);
 
       if($request->custom_route) {
@@ -91,11 +91,11 @@ class Register
       }
 
       // To Admin
-      $user['event_mail_subject'] = "User Enrolled";
+      $user['event_mail_subject'] = \SettingsSite::get('sitewide_title')." User Enrolled";
       \RapydEvents::send_mail('user_created_system', 'sitewide_notification_emails', $user);
 
       //  To User
-      $user['event_mail_subject'] = "SuretyPedia Verify Email";
+      $user['event_mail_subject'] = \SettingsSite::get('sitewide_title')." Verify Email";
       \RapydEvents::send_mail('user_created', false, $user, $data);
 
       if($request->custom_route) {
@@ -155,16 +155,16 @@ class Register
     \FullText::reindex_record('\\App\\User', $user->id);
 
     if (self::is_blocked_domain($request->email)) {
-      $user['event_mail_subject'] = "User Blocked";
+      $user['event_mail_subject'] = \SettingsSite::get('sitewide_title')." User Blocked";
       \RapydEvents::send_mail('user_registered_blocked_system', 'sitewide_notification_emails', $user);
 
-      $user['event_mail_subject'] = "Registration Fail";
+      $user['event_mail_subject'] = \SettingsSite::get('sitewide_title')." Registration Fail";
       \RapydEvents::send_mail('user_registered_blocked', false, $user);
 
       return ['success' => false, 'msg' => 'Email Domain Has Been Blocked'];
     } else {
       // To Admin
-      $user['event_mail_subject'] = "User Enrolled";
+      $user['event_mail_subject'] = \SettingsSite::get('sitewide_title')." User Enrolled";
       $user['group_name']         = $user_group->name;
       \RapydEvents::send_mail('user_created_system', 'sitewide_notification_emails', $user);
 

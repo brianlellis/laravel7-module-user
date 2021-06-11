@@ -170,7 +170,7 @@ class RapydUser extends Controller
         'user-password-create',
         $user->email,
         $user->full_name(),
-        ['event_mail_subject' => $request->subject ?? 'BondExchange Create Password'],
+        ['event_mail_subject' => $request->subject ?? \SettingsSite::get('sitewide_title').' Create Password'],
         [
           'hash_key'   => $hashed_password,
           'subject'   => $request->subject ?? 'Account Approved',
