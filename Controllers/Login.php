@@ -4,6 +4,7 @@ namespace Rapyd\Auth;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Spatie\Permission\Models\Role as SpatieRole;
 
 class Login
 {
@@ -19,8 +20,16 @@ class Login
       $credentials = $request->only('email', 'password');
 
       if (Auth::attempt($credentials)) {
+        $user     = \Auth::user();
+        $role     = $user->roles->first();
+        $redirect = $role->signin_redirect;
+
         // Authentication passed...
-        return redirect(request()->getSchemeAndHttpHost().'/admin/dashboard');
+        if ($redirect) {
+          return redirect(request()->getSchemeAndHttpHost().$redirect);
+        } else {
+          return redirect(request()->getSchemeAndHttpHost().'/admin/dashboard');
+        }
       } else {
 				return redirect(request()->getSchemeAndHttpHost().'/login')
 				->withErrors(

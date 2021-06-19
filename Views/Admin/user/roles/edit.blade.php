@@ -17,9 +17,14 @@
     @csrf
     <input type="hidden" name="role_id" value="{{$role->id}}" />
 
+    <label>Role Name</label>
     <input type="text" style="margin-bottom: 20px" class="form-control" name="role_name" value="{{$role->name}}" />
 
+    <label>Sign In Redirect</label>
+    <input type="text" style="margin-bottom: 20px" class="form-control" name="signin_redirect" value="{{$role->name}}" />
+
     {{-- TODO: NEED TO CHUNK PERMSSION FOR ROWS OF FOUR --}}
+    <h2>Permissions</h2>
     @foreach ($categories as $category)
       <div class="card">
         <div class="card-header">

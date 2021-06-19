@@ -29,8 +29,9 @@ class RapydUserRole extends Controller
 
     public function update(Request $request)
     {
-        $role = Role::find($request->role_id);
-        $role->name = $request->role_name;
+        $role                   = Role::find($request->role_id);
+        $role->name             = $request->role_name;
+        $role->signin_redirect  = $request->signin_redirect;
         $role->save();
 
         if (isset($request->all()['permission'])) {
