@@ -1,36 +1,37 @@
 @php
-use Rapyd\Ecomm\Authnet\AuthnetProfile;
-use Rapyd\Ecomm\Authnet\OrderHelper;
-use Swis\Laravel\Fulltext\Search;
+  use Rapyd\Ecomm\Authnet\AuthnetProfile;
+  use Rapyd\Ecomm\Authnet\OrderHelper;
+  use Swis\Laravel\Fulltext\Search;
 
-$tour_check = \Rapyd\Tours::first_visit();
+  $tour_check = \Rapyd\Tours::first_visit();
 
-if (request('group')) {
-  $own_profile = false;
-  $usergroup = \RapydUsergroups::show(Request::get('group'));
-} else {
-  $own_profile = true;
-  $usergroup = \RapydUsergroups::show(auth()->user()->id);
-}
+  if (request('group')) {
+    $own_profile = false;
+    $usergroup = \RapydUsergroups::show(Request::get('group'));
+  } else {
+    $own_profile = true;
+    $usergroup = \RapydUsergroups::show(auth()->user()->id);
+  }
 
-$tax_id_type = [
-  [
-    'label' => 'EIN: (xx-xxxxxxx)',
-    'value' => 'EIN',
-  ],
-  [
-    'label' => 'SSN: (xxx-xx-xxxx)',
-    'value' => 'SSN',
-  ],
-];
+  $tax_id_type = [
+    [
+      'label' => 'EIN: (xx-xxxxxxx)',
+      'value' => 'EIN',
+    ],
+    [
+      'label' => 'SSN: (xxx-xx-xxxx)',
+      'value' => 'SSN',
+    ],
+  ];
 
-if ($search_term = Request::get('agent_search')) {
-  $search = new Search();
-  $result = $search->runForClass($search_term, App\User::class)->pluck('indexable_id');
-  $agents = App\User::findMany($result);
-}
+  if ($search_term = Request::get('agent_search')) {
+    $search = new Search();
+    $result = $search->runForClass($search_term, App\User::class)->pluck('indexable_id');
+    $agents = App\User::findMany($result);
+  }
 
-$group_types = \DB::table('usergroup_types')->get();
+  $group_types = new \m_UsergroupType();
+  $group_types = $group_types->get();
 @endphp
 
 @if (!$usergroup->producer_agreement_ip && $usergroup->type->description === 'agency')

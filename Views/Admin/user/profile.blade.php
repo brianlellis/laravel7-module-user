@@ -461,7 +461,7 @@ $all_user_roles = \Spatie\Permission\Models\Role::all();
           <div class="card-footer">
             <button id="save_edited_profile" class="mt-1 btn btn-success">Save</button>
             <a href="#" class="mt-1 btn btn-danger" onclick="editProfile()">Cancel</a>
-            <button class="mt-1 btn btn-danger" href="@url('/api/user/delete/'){{ $user->id }}">Remove</button>
+            <a class="mt-1 btn btn-danger" href="@url('/api/user/delete/'){{ $user->id }}">Remove</a>
           </div>
         </div>
       </form>

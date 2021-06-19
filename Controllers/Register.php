@@ -11,37 +11,29 @@ use Rapyd\Model\UsergroupType;
 
 class Register
 {
+  protected static $validators = [
+    'email'             => 'required|email|unique:\App\User,email',
+    'name_first'        => 'required',
+    'name_last'         => 'required'
+  ];
+
   public function is_blocked_domain($email)
   {
     $blocked_domains = explode(',', \SettingsSite::get('registration_blocked_domains'));
     $email_domain    = explode('@', $email)[1];
 
     foreach ($blocked_domains as $blocked_domain) {
-      if (strpos($email_domain, $blocked_domain) !== false) {
-        return true;
-      }
+      if (strpos($email_domain, $blocked_domain) !== false) { return true; }
     }
-
     return false;
   }
 
   public function create_user(Request $request)
   {
-    $data = $request->validate([
-      'email'             => 'required|email|unique:\App\User,email',
-      'name_first'        => 'required',
-      'name_last'         => 'required',
-      'password'          => 'nullable',
-      'phone_main'        => 'nullable',
-      'address_street'    => 'nullable',
-      'address_street_2'  => 'nullable',
-      'address_city'      => 'nullable',
-      'address_state'     => 'nullable',
-      'address_zip'       => 'nullable',
-      'title'             => 'nullable',
-      'social_website'    => 'nullable',
-      'bio'               => 'nullable',
-    ]);
+    $rapyd_event  = \DB::table('rapyd_events')
+                        ->where('id','user_registered_blocked')->first();
+
+    $data = $request->validate(self::$validators);
 
     // PASSWORD CHECK
     if (isset($data['password'])) {
@@ -52,7 +44,7 @@ class Register
     }
 
     if($request->phone_main) {
-      $data['phone_main']   = preg_replace('/[^0-9]/', '', $data['phone_main']);
+      $data['phone_main'] = preg_replace('/[^0-9]/', '', $data['phone_main']);
     }
 
     $user = User::create($data);
@@ -63,89 +55,48 @@ class Register
       \RapydUsergroups::add_user($request->usergroup_id, $user->id);
     }
 
+    $user = \App\User::find(6);
     if (self::is_blocked_domain($request->email)) {
-      // ROLENAME
-      if ($request->role_name) {
-        $user->assignRole($request->role_name);
-      } else {
-        $user->assignRole('Unapproved User');
-      }
-
-      $user['event_mail_subject'] = \SettingsSite::get('sitewide_title')." User Blocked";
-      \RapydEvents::send_mail('user_registered_blocked_system', 'sitewide_notification_emails', $user);
-
-      $user['event_mail_subject'] = \SettingsSite::get('sitewide_title')." Registration Fail";
-      \RapydEvents::send_mail('user_registered_blocked', false, $user);
-
-      if($request->custom_route) {
-        return redirect($request->custom_route)->with('success','User successfully added');
-      } else {
-        return redirect(request()->getSchemeAndHttpHost().'/registration-awaiting-approval');
-      }
+      $user->assignRole($request->role_name ?? 'Unapproved User');
+      \RapydEvents::send_mail('user_registered_blocked', ['passed_user'=>$user]);
+      $redirect     = '/registration-awaiting-approval';
     } else {
-      // ROLENAME
-      if ($request->role_name) {
-        $user->assignRole($request->role_name);
-      } else {
-        $user->assignRole('Normal User');
-      }
-
-      // To Admin
-      $user['event_mail_subject'] = \SettingsSite::get('sitewide_title')." User Enrolled";
-      \RapydEvents::send_mail('user_created_system', 'sitewide_notification_emails', $user);
-
-      //  To User
-      $user['event_mail_subject'] = \SettingsSite::get('sitewide_title')." Verify Email";
-      \RapydEvents::send_mail('user_created', false, $user, $data);
-
-      if($request->custom_route) {
-        return redirect($request->custom_route)->with('success','User successfully added');
-      } else {
-        return redirect(request()->getSchemeAndHttpHost().'/registration-success');
-      }
+      $user->assignRole($request->role_name ?? 'Normal User');
+      \RapydEvents::send_mail('user_registered_success', ['passed_user'=>$user]);
+      $redirect     = '/registration-success';
     }
+    \RapydEvents::send_mail($rapyd_event, ['passed_user'=>$user]);
 
     \FullText::reindex_record('\\App\\User', $user->id);
+    // CUSTOM ROUTES COULD BE DUE TO A NEED TO OVERRIDE REDIRECT
+    // IF CREATION OF USER IS DONE IN ADMIN
+    if($request->custom_route) {
+      return redirect($request->custom_route)->with('success','User successfully added');
+    }
+    return redirect(request()->getSchemeAndHttpHost().$redirect);
   }
 
   // This Route Is For Ajax Request And Sends Back A JSON Response
   public function ajax_create_user(Request $request)
   {
-    $data = $request->validate(
-      [
-        'email'             => 'required|email|unique:users',
-        'name_first'        => 'required',
-        'name_last'         => 'required',
-        'password'          => 'nullable',
-        'phone_main'        => 'nullable',
-        'address_street'    => 'nullable',
-        'address_street_2'  => 'nullable',
-        'address_city'      => 'nullable',
-        'address_state'     => 'nullable',
-        'address_zip'       => 'nullable',
-        'title'             => 'nullable',
-        'social_website'    => 'nullable',
-        'bio'               => 'nullable',
-      ]
-    );
-
+    $data       = $request->validate(self::$validators);
     $user_group = Usergroups::find($request->usergroup);
 
     if (!$user_group) {
       $user_group = Usergroups::create([
-        'name'                    => $request->business_name,
-        'address_street'          => $request->address_street,
-        'address_street_2'        => $request->address_street_2,
-        'address_city'            => $request->address_city,
-        'address_state'           => $request->address_state,
-        'address_zip'             => intval($request->address_zip),
-        'usergroup_type_id'       => UsergroupType::where('description', 'agency')->first()->id,
+        'name'              => $request->business_name,
+        'address_street'    => $request->address_street,
+        'address_street_2'  => $request->address_street_2,
+        'address_city'      => $request->address_city,
+        'address_state'     => $request->address_state,
+        'address_zip'       => intval($request->address_zip),
+        'usergroup_type_id' => UsergroupType::where('description', 'agency')->first()->id,
       ]);
     }
 
-    $data['phone_main']             = preg_replace('/[^0-9]/', '', $data['phone_main']);
-    $data['password']               = Hash::make($data['email'] . $data['name_first'] . $data['name_last']);
-    $data['page_url_slug']          = \RapydCore::slugify($request->business_name . ' ' .$request->name_first . ' ' . $request->name_last);
+    $data['phone_main']     = preg_replace('/[^0-9]/', '', $data['phone_main']);
+    $data['password']       = Hash::make($data['email'] . $data['name_first'] . $data['name_last']);
+    $data['page_url_slug']  = \RapydCore::slugify("{$request->business_name} {$request->name_first} {$request->name_last}");
 
     $user = User::create($data);
     $user_group->users()->attach($user->id);
@@ -155,21 +106,17 @@ class Register
     \FullText::reindex_record('\\App\\User', $user->id);
 
     if (self::is_blocked_domain($request->email)) {
-      $user['event_mail_subject'] = \SettingsSite::get('sitewide_title')." User Blocked";
-      \RapydEvents::send_mail('user_registered_blocked_system', 'sitewide_notification_emails', $user);
-
-      $user['event_mail_subject'] = \SettingsSite::get('sitewide_title')." Registration Fail";
-      \RapydEvents::send_mail('user_registered_blocked', false, $user);
-
-      return ['success' => false, 'msg' => 'Email Domain Has Been Blocked'];
+      $user->assignRole($request->role_name ?? 'Unapproved User');
+      \RapydEvents::send_mail('user_registered_blocked', ['passed_user'=>$user]);
+      $msg          = 'Email Domain Has Been Blocked';
+      $success      = false;
     } else {
-      // To Admin
-      $user['event_mail_subject'] = \SettingsSite::get('sitewide_title')." User Enrolled";
-      $user['group_name']         = $user_group->name;
-      \RapydEvents::send_mail('user_created_system', 'sitewide_notification_emails', $user);
-
-      return ['success' => true, 'msg' => 'User has successfully registered'];
+      $user->assignRole($request->role_name ?? 'Normal User');
+      \RapydEvents::send_mail('user_registered_success', ['passed_user'=>$user]);
+      $msg          = 'User has successfully registered';
+      $success      = true;
     }
+    return ['success' => $success, 'msg' => $msg];
   }
 
   public function verify_email($hashdash)

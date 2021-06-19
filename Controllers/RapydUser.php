@@ -16,6 +16,12 @@ use Illuminate\Support\Facades\Auth;
 
 class RapydUser extends Controller
 {
+  protected static $validators = [
+    'email'             => 'required|email|unique:\App\User,email',
+    'name_first'        => 'required',
+    'name_last'         => 'required'
+  ];
+
   public static function address_by_ip()
   { 
     $url  = 'http://ip-api.com/php/'.request()->ip();
@@ -51,14 +57,7 @@ class RapydUser extends Controller
   // Store a newly created resource in storage.
   public function store(Request $request)
   {
-    $validator = $this->validate($request, [
-      'name_first' => 'required',
-      'name_last'  => 'required',
-      'email'      => 'required|email|unique:users',
-      'password'   => 'required|same:password_confirm',
-    ]);
-
-
+    $validator = $this->validate($request, self::$validators);
     $input = $request->except(['role_name', 'password_confirm', '_token']);
 
     if (isset($input['phone_main'])) {
@@ -74,6 +73,8 @@ class RapydUser extends Controller
     $this->requestResetPassword($request);
     $user->syncRoles($request->role_name);
     $user->get_coordinates();
+
+    \RapydEvents::send_mail('user_created', ['passed_user'=>$user]);
 
     return redirect(request()->getSchemeAndHttpHost().'/admin/user/dashboard')->with('success', 'User created successfully');
   }
@@ -99,20 +100,15 @@ class RapydUser extends Controller
   // Update the specified resource in storage.
   public function update(Request $request)
   {
-    $validator = $this->validate($request, [
-      'id'         => 'required',
-      'name_first' => 'required',
-      'name_last'  => 'required',
-    ]);
-
     $input = $request->all();
-
+    
+    // GREP FIX - COME BACK AND FIX THIS AS AVATARS HAVE BEEN MOVED TO S3 BUCKET
     // User Avatar
-    if ($request->avatar) {
-      $image = $request->file('avatar');
-      $image->move(public_path('user/avatar'), $image->getClientOriginalName());
-      $input['avatar'] = 'user/avatar/' . $image->getClientOriginalName();
-    }
+    // if ($request->avatar) {
+    //   $image = $request->file('avatar');
+    //   $image->move(public_path('user/avatar'), $image->getClientOriginalName());
+    //   $input['avatar'] = 'user/avatar/' . $image->getClientOriginalName();
+    // }
 
     if (isset($input['phone_main'])) {
       $input['phone_main'] = intval(preg_replace('/[^0-9]/', '', $input['phone_main']));
@@ -126,13 +122,19 @@ class RapydUser extends Controller
     }
 
     // User Role
+    if (
+      (!count($user->getRoleNames()) || $user->getRoleNames()[0] != 'Suspended User') &&
+      $input['user_role'] == 'Suspended User'
+    ) {
+      \RapydEvents::send_mail('user_suspended', ['passed_user'=>$user]);
+    }
     $user->syncRoles($input['user_role']);
 
     unset($input['user_role']);
 
     $user->update($input);
     $user->get_coordinates();
-
+    \RapydEvents::send_mail('user_updated', ['passed_user'=>$user]);
     \FullText::reindex_record('\\App\\User', $request->id);
 
     return back()->with('success', 'User updated successfully');
@@ -141,7 +143,7 @@ class RapydUser extends Controller
   public function update_password(Request $request)
   {
     $this->validate($request, [
-      'password'   => 'required|same:password_confirm',
+      'password'   => 'required|same:password_confirm:\App\User,password',
     ]);
 
     $input = $request->except('password_confirm');
@@ -164,19 +166,7 @@ class RapydUser extends Controller
         'password_reset'       => $hashed_password,
         'password_reset_force' => 0
       ]);
-
-      \RapydMail::build_email_template(
-        'system-default',
-        'user-password-create',
-        $user->email,
-        $user->full_name(),
-        ['event_mail_subject' => $request->subject ?? \SettingsSite::get('sitewide_title').' Create Password'],
-        [
-          'hash_key'   => $hashed_password,
-          'subject'   => $request->subject ?? 'Account Approved',
-          'message'   => $request->message ?? "Congratulations you're account has been approved! "
-        ]
-      );
+      \RapydEvents::send_mail('user_password_request', ['passed_user'=>$user]);
     }
 
     return redirect(request()->getSchemeAndHttpHost().'/login')->with(['password_reset' => 'requested']);
@@ -206,7 +196,9 @@ class RapydUser extends Controller
 
   public function destroy($user_id)
   {
-    User::find($user_id)->delete();
+    $user = User::find($user_id);
+    \RapydEvents::send_mail('user_removed', ['passed_user'=>$user]);
+    $user->delete();
     return redirect(request()->getSchemeAndHttpHost().'/admin/user/dashboard')->with('success', 'User removed successfully');
   }
 

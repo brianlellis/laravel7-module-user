@@ -1,13 +1,13 @@
 @php
-  use Rapyd\Model\Usergroups;
   $all_user_roles = \Spatie\Permission\Models\Role::all();
-  $group = null;
+  $group          = null;
 
   if(request('group')) {
-    $group = Usergroups::findOrFail(request('group'));
+    $group = \m_Usergroups::findOrFail(request('group'));
   }
 
-  $group_types = \DB::table('usergroup_types')->get();
+  $group_types = new \m_UsergroupType();
+  $group_types = $group_types->get();
 @endphp
 
 @can('user-create')
@@ -109,7 +109,6 @@
                   <input 
                     type="text" class="form-control" name="address_county" 
                     id="address_county" placeholder="County"
-                    @if($group->address_county) value="{{ $group->address_county}}" @endif
                   >
                 </div>
               </div>
