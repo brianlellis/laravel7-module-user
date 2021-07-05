@@ -19,12 +19,12 @@ class RapydUsergroups extends Controller
   {
     if($type) {
       $data = Usergroups::where('usergroup_type_id', $type)
-            ->orderBy($order_by, $order_sort)
-            ->paginate(25);
+                ->orderBy($order_by, $order_sort)
+                ->paginate(25);
     } elseif ($order_by == 'type') {
       $data = Usergroups::with(['type' => function ($q) use ($order_sort) {
-              $q->orderBy('description', $order_sort);
-            }])->paginate(25);
+                $q->orderBy('description', $order_sort);
+              }])->paginate(25);
     } elseif ($order_by) {
       $data = Usergroups::orderBy($order_by, $order_sort)->paginate(25);
     } else {
@@ -268,21 +268,8 @@ class RapydUsergroups extends Controller
           'password_reset_force' => 0
         ]);
 
-        \RapydMail::build_email_template(
-          'system-default',
-          'user-password-create',
-          $user->email,
-          $user->full_name(),
-          ['event_mail_subject' => \SettingsSite::get('sitewide_title').' Create Password'],
-          [
-            'hash_key'   => $hashed_password,
-            'subject'   => 'Account Approved',
-            'message'   => "Congratulations you're account has been approved!"
-          ]
-        );
-
-        // Error 550 Too Many Emails Per Second
-        sleep(1);
+        \RapydEvents::send_mail('user_approved', ['passed_user'=> $user]);
+        sleep(1); // Error 550 Too Many Emails Per Second
       }
 
       $user->update(['is_approved' => 1]);
@@ -298,11 +285,9 @@ class RapydUsergroups extends Controller
 
   public static function producerOverride(Request $request, $usergroup_id)
   {
-    $usergroup = Usergroups::find($usergroup_id);
-
+    $usergroup                      = Usergroups::find($usergroup_id);
     $data['producer_agreement']     = Carbon::now();
     $data['producer_agreement_ip']  = $request->ip();
-
     $usergroup->update($data);
 
     return back()->with(['success' => 'Overrode Producer Agreement']);
