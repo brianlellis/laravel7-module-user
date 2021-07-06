@@ -142,8 +142,9 @@ class RapydUser extends Controller
 
   public function update_password(Request $request)
   {
+    
     $this->validate($request, [
-      'password'   => 'required|same:password_confirm:\App\User,password',
+      'password'   => 'required|same:password_confirm',
     ]);
 
     $input = $request->except('password_confirm');
