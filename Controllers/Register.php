@@ -14,7 +14,8 @@ class Register
   protected static $validators = [
     'email'             => 'required|email|unique:\App\User,email',
     'name_first'        => 'required',
-    'name_last'         => 'required'
+    'name_last'         => 'required',
+    'phone_main'        => 'nullable'
   ];
 
   public function is_blocked_domain($email)
@@ -116,6 +117,7 @@ class Register
       $msg          = 'User has successfully registered';
       $success      = true;
     }
+    
     return ['success' => $success, 'msg' => $msg];
   }
 
