@@ -59,11 +59,11 @@ class Register
     $user = \App\User::find(6);
     if (self::is_blocked_domain($request->email)) {
       $user->assignRole($request->role_name ?? 'Unapproved User');
-      \RapydEvents::send_mail('user_registered_blocked', ['passed_user'=>$user]);
+      \RapydEvents::send_mail('user_registered_blocked', [ 'passed_user' => $user ]);
       $redirect     = '/registration-awaiting-approval';
     } else {
       $user->assignRole($request->role_name ?? 'Normal User');
-      \RapydEvents::send_mail('user_registered_success', ['passed_user'=>$user]);
+      \RapydEvents::send_mail('user_registered_success', [ 'passed_user' => $user ]);
       $redirect     = '/registration-success';
     }
     \RapydEvents::send_mail($rapyd_event, ['passed_user'=>$user]);
@@ -108,12 +108,12 @@ class Register
 
     if (self::is_blocked_domain($request->email)) {
       $user->assignRole($request->role_name ?? 'Unapproved User');
-      \RapydEvents::send_mail('user_registered_blocked', ['agent' => $user, 'agency' => $user_group]);
+      \RapydEvents::send_mail('user_registered_blocked', ['passed_user' => $user, 'agency' => $user_group]);
       $msg          = 'Email Domain Has Been Blocked';
       $success      = false;
     } else {
       $user->assignRole($request->role_name ?? 'Normal User');
-      \RapydEvents::send_mail('user_registered_success', ['agent' => $user, 'agency' => $user_group]);
+      \RapydEvents::send_mail('user_registered_success', ['passed_user' => $user, 'agency' => $user_group]);
       $msg          = 'User has successfully registered';
       $success      = true;
     }
