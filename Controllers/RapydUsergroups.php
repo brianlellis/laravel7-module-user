@@ -43,7 +43,7 @@ class RapydUsergroups extends Controller
     }
     \RapydEvents::send_mail(
       'user_group_added_to', 
-      ['passed_user'=>\App\User::find($user_id)]
+      ['user'=>\App\User::find($user_id), 'usergroup' => $group]
     );
 
     return redirect("/admin/usergroups/profile?group={$group_id}")->with('success', 'User added to group');
@@ -54,7 +54,7 @@ class RapydUsergroups extends Controller
     Usergroups::where('usergroup_id',$group_id)->where('user_id',$user_id)->delete();
     \RapydEvents::send_mail(
       'user_group_removed_from', 
-      ['passed_user'=>\App\User::find($user_id)]
+      ['user'=>\App\User::find($user_id)]
     );
 
     return back()->with('success', 'User removed from group');
@@ -82,7 +82,7 @@ class RapydUsergroups extends Controller
 
     \RapydEvents::send_mail(
       'user_group_created', 
-      ['passed_usergroup'=> $usergroup]
+      ['usergroup'=> $usergroup]
     );
 
     return redirect(request()->getSchemeAndHttpHost().'/admin/usergroups/dashboard')->with('success','Usergroup created successfully');
@@ -102,7 +102,7 @@ class RapydUsergroups extends Controller
 
     \RapydEvents::send_mail(
       'user_group_updated', 
-      ['passed_usergroup'=> $usergroup]
+      ['usergroup'=> $usergroup]
     );
 
     return redirect(request()->getSchemeAndHttpHost().'/admin/usergroups/dashboard')->with('success','Usergroup updated successfully');
@@ -112,7 +112,7 @@ class RapydUsergroups extends Controller
   {
     \RapydEvents::send_mail(
       'user_group_removed', 
-      ['passed_usergroup'=> $usergroup]
+      ['usergroup'=> $usergroup]
     );
     $usergroup->delete();
     return redirect(request()->getSchemeAndHttpHost().'/admin/usergroups/dashboard')->with('success','Usergroup deleted successfully');
@@ -249,7 +249,7 @@ class RapydUsergroups extends Controller
 
     \RapydEvents::send_mail(
       'user_group_deactivated', 
-      ['passed_usergroup'=> $usergroup]
+      ['usergroup'=> $usergroup]
     );
 
     return back()->with('success', 'Usergroup is Deactivated');
@@ -268,7 +268,7 @@ class RapydUsergroups extends Controller
           'password_reset_force' => 0
         ]);
 
-        \RapydEvents::send_mail('user_approved', ['passed_user'=> $user]);
+        \RapydEvents::send_mail('user_approved', ['user'=> $user]);
         sleep(1); // Error 550 Too Many Emails Per Second
       }
 
@@ -277,7 +277,7 @@ class RapydUsergroups extends Controller
 
     \RapydEvents::send_mail(
       'user_group_activated', 
-      ['passed_usergroup'=> $usergroup]
+      ['usergroup'=> $usergroup]
     );
 
     return back()->with('success', 'Usergroup is Activated');
