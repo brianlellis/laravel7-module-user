@@ -74,7 +74,13 @@ class RapydUser extends Controller
     $user->syncRoles($request->role_name);
     $user->get_coordinates();
 
-    \RapydEvents::send_mail('user_created', ['passed_user'=>$user]);
+    // System events passed use the model id
+    // The model id is used to locate the starting
+    // point of the model relation modeler in \RapydEventEmailModel::()
+    \RapydEvents::send_mail(
+      'user_created', 
+      ['event_group_model_id'=>$user->id]
+    );
 
     return redirect(request()->getSchemeAndHttpHost().'/admin/user/dashboard')->with('success', 'User created successfully');
   }
