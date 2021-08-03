@@ -67,10 +67,7 @@ $all_user_roles = \Spatie\Permission\Models\Role::all();
         <div class="card-body">
           <div class="text-center">
             <div class="userprofile">
-              @php
-                $avatar_path = $user->avatar ? $user->avatar : SettingsSite::get('default_user_avatar');
-              @endphp
-              <img src="{{ asset($avatar_path) }}" alt="User Avatar" class="userpic brround">
+              @useravatar
               <h3 class="mb-2 username text-dark">{{ $user->name_first }} {{ $user->name_last }}</h3>
 
               {{-- NOTE: PART OF USER GROUPS TO BE WORKED ON --}}
@@ -212,7 +209,7 @@ $all_user_roles = \Spatie\Permission\Models\Role::all();
         @endif
       </div>
 
-      @include('rapyd_admin::widgets.shareable-wrapper', ['userId' => $user->id])
+      {{-- @include('rapyd_admin::widgets.shareable-wrapper', ['userId' => $user->id]) --}}
     </div>
 
     <div class="col-lg-9 col-xl-9 col-md-12 col-sm-12" id="col-right">
