@@ -232,7 +232,7 @@ class RapydUsergroups extends Controller
       $image        = $request->file('avatar');
       $image_name   = preg_replace('/\s+/', '', $image->getClientOriginalName());
       // GREP FIX: Move file disk to s3 bucket
-      $image->move(public_path('usergroup/avatar'), image_name);
+      $image->move(public_path('usergroup/avatar'), $image_name);
       Usergroups::find($request->usergroup)->update(['avatar' => '/usergroup/avatar/' . $image_name]);
     }
 
