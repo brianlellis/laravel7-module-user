@@ -1,16 +1,15 @@
 @php
-use Rapyd\RapydUser;
 use Rapyd\Ecomm\Authnet\AuthnetProfile;
 use Rapyd\Ecomm\Authnet\OrderHelper;
 
 $tour_check = \Rapyd\Tours::first_visit();
 
 if (request('user_id')) {
-  $user = RapydUser::show(Request::get('user_id'));
+  $user = \RapydUser::show(Request::get('user_id'));
   $own_profile = $user->id === auth()->user()->id;
 } else {
   $own_profile = true;
-  $user = RapydUser::show(auth()->user()->id);
+  $user = \RapydUser::show(auth()->user()->id);
 }
 
 $all_user_roles = \Spatie\Permission\Models\Role::all();
@@ -67,7 +66,7 @@ $all_user_roles = \Spatie\Permission\Models\Role::all();
         <div class="card-body">
           <div class="text-center">
             <div class="userprofile">
-              @useravatar
+              @useravatar('use_id')
               <h3 class="mb-2 username text-dark">{{ $user->name_first }} {{ $user->name_last }}</h3>
 
               {{-- NOTE: PART OF USER GROUPS TO BE WORKED ON --}}

@@ -232,9 +232,9 @@ class RapydUser extends Controller
     })->where('name_first','!=','')->where('name_last','!=','')->orderBy('name_first')->get();
   }
 
-  public static function user_avatar()
+  public static function get_avatar($use_id = false)
   {
-    $user = \Auth::user();
+    $user = self::show(request()->get('user_id')) ?: \Auth::user();
     if($user) {
       if ($user->avatar) {
         return '<img src="'.$avatar_path.'" alt="User Avatar" class="userpic brround">';

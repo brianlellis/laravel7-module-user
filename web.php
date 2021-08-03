@@ -126,17 +126,18 @@ Route::name('rapyd.')->prefix('/api/')->middleware(['auth', 'verified'])->group(
   });
 
   Route::name('usergroup.')->prefix('usergroup/')->group(function () {
-    Route::post('create',                         '\Rapyd\RapydUsergroups@store')->name('create');
-    Route::post('avatar',                         '\Rapyd\RapydUsergroups@avatar')->name('avatar');
-    Route::post('complete',                       '\Rapyd\RapydUsergroups@complete')->name('complete');
-    Route::post('update/{usergroup}',             '\Rapyd\RapydUsergroups@update')->name('update');
-    Route::post('delete/{usergroup}',             '\Rapyd\RapydUsergroups@destroy')->name('delete');
-    Route::get('adduser/{group_id}/{user_id}',    '\Rapyd\RapydUsergroups@add_user')->name('adduser');
-    Route::get('removeuser/{group_id}/{user_id}', '\Rapyd\RapydUsergroups@remove_user')->name('removeuser');
-    Route::post('removeagent',                    '\Rapyd\RapydUsergroups@remove_agent')->name('removeuser');
-    Route::get('deactivate/{usergroup_id}',       '\Rapyd\RapydUsergroups@deactivate')->name('deactivate');
-    Route::get('activate/{usergroup_id}',         '\Rapyd\RapydUsergroups@activate')->name('activate');
-    Route::get('producer/override/{usergroup_id}','\Rapyd\RapydUsergroups@producerOverride')->name('producer.override');
+    $group = '\Rapyd\RapydUsergroups';
+    Route::post('create',                         "{$group}@store")->name('create');
+    Route::post('avatar',                         "{$group}@avatar")->name('avatar');
+    Route::post('complete',                       "{$group}@complete")->name('complete');
+    Route::post('update/{usergroup}',             "{$group}@update")->name('update');
+    Route::post('delete/{usergroup}',             "{$group}@destroy")->name('delete');
+    Route::get('adduser/{group_id}/{user_id}',    "{$group}@add_user")->name('adduser');
+    Route::get('removeuser/{group_id}/{user_id}', "{$group}@remove_user")->name('removeuser');
+    Route::post('removeagent',                    "{$group}@remove_agent")->name('removeuser');
+    Route::get('deactivate/{usergroup_id}',       "{$group}@deactivate")->name('deactivate');
+    Route::get('activate/{usergroup_id}',         "{$group}@activate")->name('activate');
+    Route::get('producer/override/{usergroup_id}',"{$group}@producerOverride")->name('producer.override');
   });
 });
 

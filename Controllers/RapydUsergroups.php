@@ -120,17 +120,8 @@ class RapydUsergroups extends Controller
 
   public function make_group($request)
   {
-    $input = $request->all();
-
-    // Usergroup Avatar
-    if ($request->file('avatar')) {
-      $image = $request->file('avatar');
-      $image->move(public_path('usergroup/avatar'), $image->getClientOriginalName());
-      $input['avatar'] = 'usergroup/avatar/' . $image->getClientOriginalName();
-    }
-
-    $input['phone_main']   = preg_replace('/[^0-9]/', '', $input['phone_main']);
-
+    $input                = $request->all();
+    $input['phone_main']  = preg_replace('/[^0-9]/', '', $input['phone_main']);
     return $input;
   }
 
@@ -213,16 +204,25 @@ class RapydUsergroups extends Controller
     return 'storage/USERGROUPS/PRODUCER/'.$producerFileName;
   }
 
-  public function avatar(Request $request)
+  public static function get_avatar($use_id = false)
   {
-    //  Avatar
-    if ($request->avatar) {
-      $image = $request->file('avatar');
-      $image->move(public_path('usergroup/avatar'), $image->getClientOriginalName());
-      Usergroups::find($request->usergroup)->update(['avatar' => 'usergroup/avatar/' . $image->getClientOriginalName()]);
+    $user = self::show(request()->get('group')) ?: \Auth::user()->usergroup();
+    if($user) {
+      if ($user->avatar) {
+        return '<img src="'.$avatar_path.'" alt="User Avatar" class="userpic brround">';
+      } else {
+        $arr_check = explode(' ', $user->name);
+        if (count($arr_check) > 1) {
+          $initials = $arr_check[0][0].$arr_check[1][0];
+        } else {
+          $initials = $arr_check[0].$arr_check[1];
+        }
+        return '<div class="userpic brround">'.$initials.'</div>';
+      }
+    } else {
+      $domain_source = \SettingsSite::get('system_policy_domain_source');
+      return '<div class="userpic brround">'.($domain_source ?? 'NA').'</div>';
     }
-
-    return back();
   }
 
   public function getAgency(Request $request)

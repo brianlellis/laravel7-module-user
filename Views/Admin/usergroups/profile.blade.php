@@ -116,7 +116,7 @@
                     <div class="card-body">
                       <div class="text-center">
                         <div class="userprofile">
-                          @useravatar
+                          @usergroupavatar
                           <h3 class="username text-dark mb-2">{{ $usergroup->name ?? '' }}</h3>
                         </div>
                       </div>
