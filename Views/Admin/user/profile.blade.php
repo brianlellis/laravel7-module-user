@@ -303,9 +303,9 @@ $all_user_roles = \Spatie\Permission\Models\Role::all();
               <div class="col-sm-4 form-group">
                 <label for="usergroup_id">Agency</label>
                 <div id="agency_list_wrapper">
-                  @if ($user->usergroup->first())
+                  @if ($user->usergroup())
                     <a type="text" class="mr-2 text-primary"
-                      href="@url('/admin/usergroups/profile?group='){{ $user->usergroup->first()->id }}">{{ $user->usergroup->first()->name }}</a>
+                      href="@url('/admin/usergroups/profile?group='){{ $user->usergroup()->id }}">{{ $user->usergroup()->name }}</a>
                   @endif
                 </div>
               </div>
@@ -669,7 +669,7 @@ $all_user_roles = \Spatie\Permission\Models\Role::all();
         title: 'View Agency Profile',
         description: "Take a look at your agency profile by clicking here.",
       }
-      @if ($user->usergroup->first())
+      @if ($user->usergroup())
   ,{
     title: 'Continue Tour?',
     description: `
@@ -678,7 +678,7 @@ $all_user_roles = \Spatie\Permission\Models\Role::all();
       needed in the future.
     </p>
     <button class="btn btn-success"
-      onclick="(function(){ window.location.href='/admin/usergroups/profile?group={{ $user->usergroup->first()->id }}';})();">Continue
+      onclick="(function(){ window.location.href='/admin/usergroups/profile?group={{ $user->usergroup()->id }}';})();">Continue
       Tour</button>
     <button class="btn btn-danger" onclick="(function(){ $('.gc-close').click();})();">End Tour</button>
   `,

@@ -97,13 +97,12 @@
           <ul class="tab_list">
             <li id="tab_overview" class="active" rel="tab_1_1" onclick="set_active_tab(this)"
               data-tab="Overview">Overview</li>
-            @if($usergroup->type->description === 'agency')
-              <li id="tab_agents" rel="tab_1_2" onclick="set_active_tab(this)" data-tab="Agents">Agents</li>
+
+              <li id="tab_agents" rel="tab_1_2" onclick="set_active_tab(this)" data-tab="Agents">Users</li>
               <li id="tab_policies" rel="tab_1_3" onclick="set_active_tab(this)" data-tab="Policies">Policies
               </li>
               <li id="tab_payment_methods" rel="tab_1_4" onclick="set_active_tab(this)"
               data-tab="Payment Methods">Payment Methods</li>
-            @endif
           </ul>
 
           <div class="content_wrapper">
@@ -403,8 +402,7 @@
               </div>
             </div>
 
-            @if($usergroup->type->description === 'agency')
-              {{-- AGENCY AGENTS --}}
+              {{--  User --}}
               <div id="agency_agents_wrapper" class="tab_content tab_1_2" title="tab_1_2">
                 {{-- Users in the Group --}}
                 <div class="card current-agents-container">
@@ -932,7 +930,6 @@
                   </div>
                 </div>
               @endif
-            @endif
           </div>
         </div>
       </div>
