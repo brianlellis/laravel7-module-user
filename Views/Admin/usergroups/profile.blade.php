@@ -116,11 +116,7 @@
                     <div class="card-body">
                       <div class="text-center">
                         <div class="userprofile">
-                          @php
-                            $avatar_path = $usergroup->avatar ? $usergroup->avatar : SettingsSite::get('default_user_avatar');
-                          @endphp
-                          <img src="{{ asset($avatar_path) }}" alt="User Avatar"
-                            class="userpic brround">
+                          @useravatar
                           <h3 class="username text-dark mb-2">{{ $usergroup->name ?? '' }}</h3>
                         </div>
                       </div>

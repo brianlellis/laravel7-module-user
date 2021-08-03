@@ -209,7 +209,7 @@ $all_user_roles = \Spatie\Permission\Models\Role::all();
         @endif
       </div>
 
-      {{-- @include('rapyd_admin::widgets.shareable-wrapper', ['userId' => $user->id]) --}}
+      @include('rapyd_admin::widgets.shareable-wrapper', ['userId' => $user->id])
     </div>
 
     <div class="col-lg-9 col-xl-9 col-md-12 col-sm-12" id="col-right">
