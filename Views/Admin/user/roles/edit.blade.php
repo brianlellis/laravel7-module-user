@@ -21,7 +21,7 @@
     <input type="text" style="margin-bottom: 20px" class="form-control" name="role_name" value="{{$role->name}}" />
 
     <label>Sign In Redirect</label>
-    <input type="text" style="margin-bottom: 20px" class="form-control" name="signin_redirect" value="{{$role->name}}" />
+    <input type="text" style="margin-bottom: 20px" class="form-control" name="signin_redirect" value="{{$role->signin_redirect}}" />
 
     {{-- TODO: NEED TO CHUNK PERMSSION FOR ROWS OF FOUR --}}
     <h2>Permissions</h2>
