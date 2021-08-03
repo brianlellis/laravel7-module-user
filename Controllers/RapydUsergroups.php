@@ -209,7 +209,7 @@ class RapydUsergroups extends Controller
     $user = self::show(request()->get('group')) ?: \Auth::user()->usergroup();
     if($user) {
       if ($user->avatar) {
-        return '<img src="'.$avatar_path.'" alt="User Avatar" class="userpic brround">';
+        return '<img src="/'.$user->avatar.'" alt="User Avatar" class="userpic brround">';
       } else {
         $arr_check = explode(' ', $user->name);
         if (count($arr_check) > 1) {
@@ -223,6 +223,20 @@ class RapydUsergroups extends Controller
       $domain_source = \SettingsSite::get('system_policy_domain_source');
       return '<div class="userpic brround">'.($domain_source ?? 'NA').'</div>';
     }
+  }
+
+  public function avatar(Request $request)
+  {
+    //  Avatar
+    if ($request->avatar) {
+      $image        = $request->file('avatar');
+      $image_name   = preg_replace('/\s+/', '', $image->getClientOriginalName());
+      // GREP FIX: Move file disk to s3 bucket
+      $image->move(public_path('usergroup/avatar'), image_name);
+      Usergroups::find($request->usergroup)->update(['avatar' => '/usergroup/avatar/' . $image_name]);
+    }
+
+    return back();
   }
 
   public function getAgency(Request $request)
