@@ -169,11 +169,16 @@ class RapydUser extends Controller
 
     if ($user) {
       $hashed_password = Hash::make($request->email);
+
       $user->update([
         'password_reset'       => $hashed_password,
         'password_reset_force' => 0
       ]);
-      \RapydEvents::send_mail('user_password_request', ['passed_user'=>$user]);
+
+      \RapydEvents::send_mail('user_password_request', [
+        'event_group_model_id'  => $user->id,
+        'passed_email'			    => $user->email,
+      ]);
     }
 
     return redirect(request()->getSchemeAndHttpHost().'/login')->with(['password_reset' => 'requested']);
