@@ -108,12 +108,24 @@ class Register
 
     if (self::is_blocked_domain($request->email)) {
       $user->assignRole($request->role_name ?? 'Unapproved User');
-      \RapydEvents::send_mail('user_registered_blocked', ['agent' => $user, 'agency' => $user_group]);
+
+      \RapydEvents::send_mail('user_registered_blocked',
+        [
+          'event_group_model_id' => $user->id
+        ]
+      );
+
       $msg          = 'Email Domain Has Been Blocked';
       $success      = false;
     } else {
       $user->assignRole($request->role_name ?? 'Normal User');
-      \RapydEvents::send_mail('user_registered_success', ['agent' => $user, 'agency' => $user_group]);
+
+      \RapydEvents::send_mail('user_registered_success',
+        [
+          'event_group_model_id' => $user->id
+        ]
+      );
+
       $msg          = 'User has successfully registered';
       $success      = true;
     }
