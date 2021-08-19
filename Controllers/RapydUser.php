@@ -124,7 +124,7 @@ class RapydUser extends Controller
 
     // If User is currently unapproved then send approval email
     if ($user->is_approved === 0 && (int)$request->is_approved === 1) {
-      $this->requestResetPassword($request);
+      $this->requestResetPassword($request, 'user_approved');
     }
 
     // User Role
@@ -166,7 +166,7 @@ class RapydUser extends Controller
   }
 
   // Request Password Reset
-  public function requestResetPassword(REQUEST $request)
+  public function requestResetPassword(REQUEST $request, $event = 'user_password_request')
   {
 
     $user = User::where('email', $request->email)->orWhere('id', $request->id)->first();
@@ -179,7 +179,7 @@ class RapydUser extends Controller
         'password_reset_force' => 0
       ]);
 
-      \RapydEvents::send_mail('user_password_request', [
+      \RapydEvents::send_mail($event, [
         'event_group_model_id'  => $user->id,
         'passed_email'			    => $user->email,
       ]);
