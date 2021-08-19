@@ -132,7 +132,9 @@ class RapydUser extends Controller
       (!count($user->getRoleNames()) || $user->getRoleNames()[0] != 'Suspended User') &&
       $input['user_role'] == 'Suspended User'
     ) {
-      \RapydEvents::send_mail('user_suspended', ['passed_user'=>$user]);
+      \RapydEvents::send_mail('user_suspended', [
+        'event_group_model_id'  => $user->id,
+      ]);
     }
     $user->syncRoles($input['user_role']);
 
@@ -140,7 +142,9 @@ class RapydUser extends Controller
 
     $user->update($input);
     $user->get_coordinates();
-    \RapydEvents::send_mail('user_updated', ['passed_user'=>$user]);
+    \RapydEvents::send_mail('user_updated', [
+      'event_group_model_id'  => $user->id,
+    ]);
     \FullText::reindex_record('\\App\\User', $request->id);
 
     return back()->with('success', 'User updated successfully');
@@ -209,7 +213,9 @@ class RapydUser extends Controller
   public function destroy($user_id)
   {
     $user = User::find($user_id);
-    \RapydEvents::send_mail('user_removed', ['passed_user'=>$user]);
+    \RapydEvents::send_mail('user_removed', [
+      'event_group_model_id'  => $user->id,
+    ]);
     $user->delete();
     return redirect(request()->getSchemeAndHttpHost().'/admin/user/dashboard')->with('success', 'User removed successfully');
   }
