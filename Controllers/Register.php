@@ -66,7 +66,9 @@ class Register
       \RapydEvents::send_mail('user_registered_success', [ 'agent' => $user ]);
       $redirect     = '/registration-success';
     }
-    \RapydEvents::send_mail($rapyd_event, ['agent'=>$user]);
+    \RapydEvents::send_mail($rapyd_event, [
+      'event_group_model_id'  => $user->id,
+    ]);
 
     \FullText::reindex_record('\\App\\User', $user->id);
     // CUSTOM ROUTES COULD BE DUE TO A NEED TO OVERRIDE REDIRECT
