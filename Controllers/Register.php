@@ -59,11 +59,15 @@ class Register
     $user = \App\User::find(6);
     if (self::is_blocked_domain($request->email)) {
       $user->assignRole($request->role_name ?? 'Unapproved User');
-      \RapydEvents::send_mail('user_registered_blocked', [ 'agent' => $user ]);
+      \RapydEvents::send_mail('user_registered_blocked', [
+        'event_group_model_id'  => $user->id,
+      ]);
       $redirect     = '/registration-awaiting-approval';
     } else {
       $user->assignRole($request->role_name ?? 'Normal User');
-      \RapydEvents::send_mail('user_registered_success', [ 'agent' => $user ]);
+      \RapydEvents::send_mail('user_registered_success', [
+        'event_group_model_id'  => $user->id,
+      ]);
       $redirect     = '/registration-success';
     }
     \RapydEvents::send_mail($rapyd_event, [
