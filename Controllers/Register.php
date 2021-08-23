@@ -72,7 +72,7 @@ class Register
       if($request->role_name === 'Agent') { 
         \RapydEvents::send_mail('user_approved', [
           'event_group_model_id'  => $user->id,
-          'passed_user'			    => $user,
+          'passed_user'			      => $user,
         ]);
       }
 
