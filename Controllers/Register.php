@@ -69,9 +69,10 @@ class Register
       ]);
 
       // IF Agent Send Email To User To Create Password
-      if($request->role_name === 'Agent') {
-        \RapydEvents::send_mail('user_password_request', [
+      if($request->role_name === 'Agent') { 
+        \RapydEvents::send_mail('user_approved', [
           'event_group_model_id'  => $user->id,
+          'passed_user'			    => $user,
         ]);
       }
 
