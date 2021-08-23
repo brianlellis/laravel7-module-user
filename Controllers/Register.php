@@ -56,7 +56,6 @@ class Register
       \RapydUsergroups::add_user($request->usergroup_id, $user->id);
     }
 
-    $user = \App\User::find(6);
     if (self::is_blocked_domain($request->email)) {
       $user->assignRole($request->role_name ?? 'Unapproved User');
       \RapydEvents::send_mail('user_registered_blocked', [
@@ -68,11 +67,16 @@ class Register
       \RapydEvents::send_mail('user_registered_success', [
         'event_group_model_id'  => $user->id,
       ]);
-      $redirect     = '/registration-success';
+
+      // IF Agent Send Email To User To Create Password
+      if($request->role_name === 'Agent') {
+        \RapydEvents::send_mail('user_password_request', [
+          'event_group_model_id'  => $user->id,
+        ]);
+      }
+
+      $redirect     = "/admin/usergroups/profile?group={$request->usergroup_id}&tab=Agents";
     }
-    \RapydEvents::send_mail($rapyd_event, [
-      'event_group_model_id'  => $user->id,
-    ]);
 
     \FullText::reindex_record('\\App\\User', $user->id);
     // CUSTOM ROUTES COULD BE DUE TO A NEED TO OVERRIDE REDIRECT
