@@ -227,8 +227,9 @@ class RapydUser extends Controller
       $image        = $request->file('avatar');
       $image_name   = preg_replace('/\s+/', '', $image->getClientOriginalName());
       // GREP FIX: Change location to an S3 Bucket
-      $image->move(public_path('user/avatar'), $image_name);
-      User::find($request->user)->update(['avatar' => 'user/avatar/' . $image_name]);
+      // $image->move(public_path('user/avatar'), $image_name);
+      $store = \Storage::disk('s3')->put('user/avatar/' . $image_name, $image);
+      User::find($request->user)->update(['avatar' => $store]);
     }
 
     return back();
@@ -239,10 +240,10 @@ class RapydUser extends Controller
     $user = User::find($request->user);
 
     if($user->avatar) {
-      \File::delete($user->avatar);
+      \Storage::disk('s3')->delete($user->avatar);
       $user->update(['avatar' => null]);
     }
-    
+
     return back();
   }
 
@@ -267,7 +268,7 @@ class RapydUser extends Controller
 
     if($user) {
       if ($user->avatar) {
-        $avatar_url = url($user->avatar);
+        $avatar_url = \Storage::disk('s3')->url($user->avatar);
         return "<img src='{$avatar_url}' alt='User Avatar' class='userpic brround'>";
       } else {
         $initials = $user->name_first[0].$user->name_last[0];
