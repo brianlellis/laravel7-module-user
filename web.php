@@ -109,6 +109,7 @@ Route::name('rapyd.')->prefix('/api/')->middleware(['auth', 'verified'])->group(
   	Route::post('create',           '\Rapyd\RapydUser@store')->name('create');
   	Route::post('update',           '\Rapyd\RapydUser@update')->name('update');
   	Route::post('avatar',           '\Rapyd\RapydUser@avatar')->name('avatar');
+  	Route::post('avatar/remove', '\Rapyd\RapydUser@avatar_remove')->name('avatar.remove');
   	Route::get('delete/{user_id}',  '\Rapyd\RapydUser@destroy')->name('delete');
     Route::post('update-pass',      '\Rapyd\RapydUser@update_password')->name('update_pass');
 

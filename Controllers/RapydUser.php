@@ -234,6 +234,18 @@ class RapydUser extends Controller
     return back();
   }
 
+  public function avatar_remove(Request $request)
+  {
+    $user = User::find($request->user);
+
+    if($user->avatar) {
+      \File::delete($user->avatar);
+      $user->update(['avatar' => null]);
+    }
+    
+    return back();
+  }
+
   public static function internal_users()
   {
     return \App\User::whereHas("roles", function($q){
