@@ -244,15 +244,22 @@ class RapydUser extends Controller
     })->where('name_first','!=','')->where('name_last','!=','')->orderBy('name_first')->get();
   }
 
-  public static function get_avatar($use_id = false)
+  public static function get_avatar($user_id = false)
   {
-    $user = self::show(request()->get('user_id')) ?: \Auth::user();
+ 
+    if(!$user_id && request('user_id')) {
+      $user_id = request('user_id');
+    }
+    
+    $user = self::show($user_id) ?: \Auth::user();
+
     if($user) {
       if ($user->avatar) {
-        return '<img src="/'.$user->avatar.'" alt="User Avatar" class="userpic brround">';
+        $avatar_url = url($user->avatar);
+        return "<img src='{$avatar_url}' alt='User Avatar' class='userpic brround'>";
       } else {
         $initials = $user->name_first[0].$user->name_last[0];
-        return '<div class="userpic brround">'.$initials.'</div>';
+        return '<div class="userpic brround initials">'.$initials.'</div>';
       }
     } else {
       $domain_source = \SettingsSite::get('system_policy_domain_source');

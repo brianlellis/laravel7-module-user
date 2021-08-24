@@ -66,7 +66,7 @@ $all_user_roles = \Spatie\Permission\Models\Role::all();
         <div class="card-body">
           <div class="text-center">
             <div class="userprofile">
-              @useravatar('use_id')
+              {!!\RapydUser::get_avatar($user->id)!!}
               <h3 class="mb-2 username text-dark">{{ $user->name_first }} {{ $user->name_last }}</h3>
 
               {{-- NOTE: PART OF USER GROUPS TO BE WORKED ON --}}

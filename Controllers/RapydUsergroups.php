@@ -204,9 +204,13 @@ class RapydUsergroups extends Controller
     return 'storage/USERGROUPS/PRODUCER/'.$producerFileName;
   }
 
-  public static function get_avatar($use_id = false)
+  public static function get_avatar($group_id = false)
   {
-    $user = self::show(request()->get('group')) ?: \Auth::user()->usergroup();
+    if(!$group_id && request()->get('group')) {
+      $group_id = request()->get('group');
+    }
+
+    $user = self::show($group_id) ?: \Auth::user()->usergroup();
     if($user) {
       if ($user->avatar) {
         return '<img src="/'.$user->avatar.'" alt="User Avatar" class="userpic brround">';

@@ -115,7 +115,7 @@
                     <div class="card-body">
                       <div class="text-center">
                         <div class="userprofile">
-                          @usergroupavatar
+                          {!! \RapydUsergroups::get_avatar($usergroup->id) !!}
                           <h3 class="username text-dark mb-2">{{ $usergroup->name ?? '' }}</h3>
                         </div>
                       </div>
@@ -131,7 +131,7 @@
                     </div>
                   </div>
 
-                  @include('rapyd_admin::widgets.shareable-wrapper', ['userId' => $usergroup->id])
+                  @include('rapyd_admin::widgets.shareable-wrapper', ['userId' => auth()->user()->id])
                 </div>
 
                 <div class="col-lg-9 col-md-12" id="col-right">
