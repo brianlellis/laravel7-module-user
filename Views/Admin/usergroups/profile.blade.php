@@ -111,6 +111,7 @@
               <div class="row">
                 {{-- LEFT SIDE BAR --}}
                 <div class="col-lg-3 col-md-12" id="col-left">
+                  
                   <div class="card">
                     <div class="card-body">
                       <div class="text-center">
