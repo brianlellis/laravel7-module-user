@@ -22,9 +22,10 @@ class RapydUsergroups extends Controller
                 ->orderBy($order_by, $order_sort)
                 ->paginate(25);
     } elseif ($order_by == 'type') {
-      $data = Usergroups::with(['type' => function ($q) use ($order_sort) {
-                $q->orderBy('description', $order_sort);
-              }])->paginate(25);
+      $data = Usergroups::join('usergroup_types', 'usergroup_types.id', '=', 'usergroups.usergroup_type_id')
+                ->select('usergroups.*')
+                ->orderBy('usergroup_types.description', $order_sort)
+                ->paginate(25);
     } elseif ($order_by) {
       $data = Usergroups::orderBy($order_by, $order_sort)->paginate(25);
     } else {
@@ -42,7 +43,7 @@ class RapydUsergroups extends Controller
       $group->users()->attach($user_id);
     }
     \RapydEvents::send_mail(
-      'user_group_added_to', 
+      'user_group_added_to',
       ['user'=>\App\User::find($user_id), 'usergroup' => $group]
     );
 
@@ -50,10 +51,10 @@ class RapydUsergroups extends Controller
   }
 
   public static function remove_user($group_id, $user_id)
-  { 
+  {
     Usergroups::where('usergroup_id',$group_id)->where('user_id',$user_id)->delete();
     \RapydEvents::send_mail(
-      'user_group_removed_from', 
+      'user_group_removed_from',
       ['user'=>\App\User::find($user_id)]
     );
 
@@ -81,7 +82,7 @@ class RapydUsergroups extends Controller
     $usergroup->get_coordinates();
 
     \RapydEvents::send_mail(
-      'user_group_created', 
+      'user_group_created',
       ['usergroup'=> $usergroup]
     );
 
@@ -101,7 +102,7 @@ class RapydUsergroups extends Controller
     \FullText::reindex_record('\\Rapyd\\Model\\Usergroups', $usergroup->id);
 
     \RapydEvents::send_mail(
-      'user_group_updated', 
+      'user_group_updated',
       ['usergroup'=> $usergroup]
     );
 
@@ -111,7 +112,7 @@ class RapydUsergroups extends Controller
   public function destroy(Usergroups $usergroup)
   {
     \RapydEvents::send_mail(
-      'user_group_removed', 
+      'user_group_removed',
       ['usergroup'=> $usergroup]
     );
     $usergroup->delete();
@@ -262,7 +263,7 @@ class RapydUsergroups extends Controller
     }
 
     \RapydEvents::send_mail(
-      'user_group_deactivated', 
+      'user_group_deactivated',
       ['usergroup'=> $usergroup]
     );
 
@@ -290,7 +291,7 @@ class RapydUsergroups extends Controller
     }
 
     \RapydEvents::send_mail(
-      'user_group_activated', 
+      'user_group_activated',
       ['usergroup'=> $usergroup]
     );
 
