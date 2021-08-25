@@ -729,6 +729,7 @@
                     @endif
 
                     {{-- AGENCY ATTACHED PAYMENT METHODS FROM AGENTS --}}
+                    
                     @foreach ($usergroup->users as $user)
                       @if ($user->authnet_id)
                         @php

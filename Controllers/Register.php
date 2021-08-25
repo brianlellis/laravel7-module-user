@@ -15,7 +15,13 @@ class Register
     'email'             => 'required|email|unique:\App\User,email',
     'name_first'        => 'required',
     'name_last'         => 'required',
-    'phone_main'        => 'nullable'
+    'phone_main'        => 'nullable',
+    'address_street'    => 'nullable',
+    'address_street_2'  => 'nullable',
+    'address_city'      => 'nullable',
+    'address_state'     => 'nullable',
+    'address_zip'       => 'nullable',
+    'address_county'    => 'nullable',
   ];
 
   public function is_blocked_domain($email)
