@@ -109,6 +109,7 @@ class Register
         'address_state'     => $request->address_state,
         'address_zip'       => intval($request->address_zip),
         'usergroup_type_id' => UsergroupType::where('description', 'agency')->first()->id,
+        'phone_main'        => isset($data['phone_main']) ? preg_replace('/[^0-9]/', '', $data['phone_main']) : null
       ]);
     }
 
