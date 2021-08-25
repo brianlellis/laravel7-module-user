@@ -128,6 +128,12 @@
                           <input type="file" class="form-control form-control-sm"
                             name="avatar" accept=".jpg,.jpeg,.png" id="avatar_file">
                         </form>
+
+                        <form action="{{ route('rapyd.usergroup.avatar.remove', ['usergroup' => $usergroup]) }}" method="POST">
+                          @csrf
+                          <button type="submit"
+                            class="btn btn-block btn-primary mt-5 btn-sm font-weight-bold">Remove Avatar</button>
+                        </form>
                       </div>
                     </div>
                   </div>

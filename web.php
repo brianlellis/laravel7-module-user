@@ -130,6 +130,7 @@ Route::name('rapyd.')->prefix('/api/')->middleware(['auth', 'verified'])->group(
     $group = '\Rapyd\RapydUsergroups';
     Route::post('create',                         "{$group}@store")->name('create');
     Route::post('avatar',                         "{$group}@avatar")->name('avatar');
+    Route::post('avatar/remove',                  "{$group}@avatar_remove")->name('avatar.remove');
     Route::post('complete',                       "{$group}@complete")->name('complete');
     Route::post('update/{usergroup}',             "{$group}@update")->name('update');
     Route::post('delete/{usergroup}',             "{$group}@destroy")->name('delete');

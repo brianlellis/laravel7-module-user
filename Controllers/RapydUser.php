@@ -226,9 +226,7 @@ class RapydUser extends Controller
     if ($request->avatar) {
       $image        = $request->file('avatar');
       $image_name   = preg_replace('/\s+/', '', $image->getClientOriginalName());
-      // GREP FIX: Change location to an S3 Bucket
-      // $image->move(public_path('user/avatar'), $image_name);
-      $store = \Storage::disk('s3')->put('user/avatar/' . $image_name, $image);
+      $store        = \Storage::disk('s3')->put('user/avatar/' . $image_name, $image);
       User::find($request->user)->update(['avatar' => $store]);
     }
 
