@@ -608,7 +608,7 @@ $all_user_roles = \Spatie\Permission\Models\Role::all();
       @endif
     </div>
   </div>
-
+  
   <script src="/modules/User/Resources/Admin/js/user_profile.js"></script>
   <script>
     function copy_principal_to_card() {
@@ -717,3 +717,5 @@ $all_user_roles = \Spatie\Permission\Models\Role::all();
 
   </script>
 @endif
+
+@pageloading

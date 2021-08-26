@@ -339,29 +339,30 @@
                             </div>
                           </div>
                         </div>
-                        <div class="row">
-                          <div class="col-md-4 col-sm-12">
-                            <div class="form-group">
-
-                              <label class="form-label">Tax ID Format</label>
-                              <select name="tax_id_type" class="form-control">
-                                <option value="">Format Type ( ENI / SSN )</option>
-                                @foreach ($tax_id_type as $item)
-                                  <option value="{{ $item['value'] }}" @if ($usergroup && $usergroup->tax_id_type === $item['value']) selected @endif>
-                                    {{ $item['label'] }}</option>
-                                @endforeach
-                              </select>
+                        @can('edit-tax-id')
+                          <div class="row">
+                            <div class="col-md-4 col-sm-12">
+                              <div class="form-group">
+                                <label class="form-label">Tax ID Format</label>
+                                <select name="tax_id_type" class="form-control">
+                                  <option value="">Format Type ( ENI / SSN )</option>
+                                  @foreach ($tax_id_type as $item)
+                                    <option value="{{ $item['value'] }}" @if ($usergroup && $usergroup->tax_id_type === $item['value']) selected @endif>
+                                      {{ $item['label'] }}</option>
+                                  @endforeach
+                                </select>
+                              </div>
+                            </div>
+                            <div class="col-md-8 col-sm-12">
+                              <div class="form-group">
+                                <label class="form-label">Tax ID</label>
+                                <input name="tax_id" class="form-control"
+                                  placeholder="Tax ID"
+                                  value="{{ $usergroup->tax_id ?? old('tax_id') }}">
+                              </div>
                             </div>
                           </div>
-                          <div class="col-md-8 col-sm-12">
-                            <div class="form-group">
-                              <label class="form-label">Tax ID</label>
-                              <input name="tax_id" class="form-control"
-                                placeholder="Tax ID"
-                                value="{{ $usergroup->tax_id ?? old('tax_id') }}">
-                            </div>
-                          </div>
-                        </div>
+                        @endcan
                       </div>
 
 
@@ -954,3 +955,5 @@
   @if ($tour_check) window.guideChimp.start(); @endif
 
 </script>
+
+@pageloading
