@@ -322,4 +322,20 @@ class RapydUsergroups extends Controller
 
     return back()->with(['success' => 'Overrode Producer Agreement']);
   }
+
+  public static function producerSend($usergroup_id)
+  {
+    $usergroup = Usergroups::findOrFail($usergroup_id);
+    
+    if(!$usergroup->email) {
+      return redirect(request()->getSchemeAndHttpHost() . "/admin/usergroups/profile?group={$usergroup_id}")->with('error', 'Agency Primary Email Required');
+    }
+
+    \RapydEvents::send_mail('complete_producer_agreement', [
+      'event_group_model_id'  => $usergroup->id,
+      'passed_email'          => $usergroup->email
+    ]);
+  
+    return redirect(request()->getSchemeAndHttpHost() . "/admin/usergroups/profile?group={$usergroup_id}")->with('success', 'Producer Agreement Sent');
+  }
 }

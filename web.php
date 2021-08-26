@@ -140,6 +140,7 @@ Route::name('rapyd.')->prefix('/api/')->middleware(['auth', 'verified'])->group(
     Route::get('deactivate/{usergroup_id}',       "{$group}@deactivate")->name('deactivate');
     Route::get('activate/{usergroup_id}',         "{$group}@activate")->name('activate');
     Route::get('producer/override/{usergroup_id}',"{$group}@producerOverride")->name('producer.override');
+    Route::get('producer/send/{usergroup_id}',    "{$group}@producerSend")->name('producer.send');
   });
 });
 
