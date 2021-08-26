@@ -26,7 +26,9 @@ class Login
 
         // Authentication passed...
         if(session()->has('url.intended')) {
-          return redirect(session()->get('url.intended'));
+          $redirect = session()->get('url.intended');
+          session()->forget('url.intended');
+          return redirect($redirect);
         }elseif ($redirect) {
           return redirect(request()->getSchemeAndHttpHost().$redirect);
         } else {
