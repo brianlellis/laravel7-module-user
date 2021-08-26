@@ -29,7 +29,7 @@ class Login
           $redirect = session()->get('url.intended');
           session()->forget('url.intended');
           return redirect($redirect);
-        }elseif ($redirect) {
+        } elseif ($redirect) {
           return redirect(request()->getSchemeAndHttpHost().$redirect);
         } else {
           return redirect(request()->getSchemeAndHttpHost().'/admin/dashboard');
