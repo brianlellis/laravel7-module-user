@@ -189,7 +189,6 @@
                               @endif
                             >
                           </div>
-
                           <div class="col-lg-6 col-md-12">
                             <div class="form-group">
                               <label for="exampleInputname">Name</label>
@@ -210,6 +209,17 @@
                                   value="{{ $usergroup->phone_main }}"
                                 @endif
                               >
+                            </div>
+                          </div>
+                          <div class="col-lg-6 col-md-12">
+                            <div class="form-group">
+                              <label>Primary Email</label>
+                              <input type="email" class="form-control" name="email"
+                                placeholder="email" 
+                                @if($usergroup->email)
+                                  value="{{ $usergroup->email }}"
+                                @endif
+                                >
                             </div>
                           </div>
                         </div>
