@@ -230,7 +230,7 @@ class RapydUser extends Controller
       User::find($request->user)->update(['avatar' => $store]);
     }
 
-    return back();
+    return redirect('/admin/user/profile?user_id=' . $request->user);
   }
 
   public function avatar_remove(Request $request)
@@ -242,7 +242,7 @@ class RapydUser extends Controller
       $user->update(['avatar' => null]);
     }
 
-    return back();
+    return redirect('/admin/user/profile?user_id=' . $request->user);
   }
 
   public static function internal_users()
