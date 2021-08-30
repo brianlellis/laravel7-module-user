@@ -25,7 +25,11 @@ class Login
         $redirect = $role->signin_redirect;
 
         // Authentication passed...
-        if ($redirect) {
+        if(session()->has('url.intended')) {
+          $redirect = session()->get('url.intended');
+          session()->forget('url.intended');
+          return redirect($redirect);
+        } elseif ($redirect) {
           return redirect(request()->getSchemeAndHttpHost().$redirect);
         } else {
           return redirect(request()->getSchemeAndHttpHost().'/admin/dashboard');

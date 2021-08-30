@@ -226,12 +226,23 @@ class RapydUser extends Controller
     if ($request->avatar) {
       $image        = $request->file('avatar');
       $image_name   = preg_replace('/\s+/', '', $image->getClientOriginalName());
-      // GREP FIX: Change location to an S3 Bucket
-      $image->move(public_path('user/avatar'), $image_name);
-      User::find($request->user)->update(['avatar' => 'user/avatar/' . $image_name]);
+      $store        = \Storage::disk('s3')->put('user/avatar/' . $image_name, $image);
+      User::find($request->user)->update(['avatar' => $store]);
     }
 
-    return back();
+    return redirect('/admin/user/profile?user_id=' . $request->user);
+  }
+
+  public function avatar_remove(Request $request)
+  {
+    $user = User::find($request->user);
+
+    if($user->avatar) {
+      \Storage::disk('s3')->delete($user->avatar);
+      $user->update(['avatar' => null]);
+    }
+
+    return redirect('/admin/user/profile?user_id=' . $request->user);
   }
 
   public static function internal_users()
@@ -244,15 +255,22 @@ class RapydUser extends Controller
     })->where('name_first','!=','')->where('name_last','!=','')->orderBy('name_first')->get();
   }
 
-  public static function get_avatar($use_id = false)
+  public static function get_avatar($user_id = false)
   {
-    $user = self::show(request()->get('user_id')) ?: \Auth::user();
+ 
+    if(!$user_id && request('user_id')) {
+      $user_id = request('user_id');
+    }
+    
+    $user = self::show($user_id) ?: \Auth::user();
+
     if($user) {
       if ($user->avatar) {
-        return '<img src="/'.$user->avatar.'" alt="User Avatar" class="userpic brround">';
+        $avatar_url = \Storage::disk('s3')->url($user->avatar);
+        return "<img src='{$avatar_url}' alt='User Avatar' class='userpic brround'>";
       } else {
         $initials = $user->name_first[0].$user->name_last[0];
-        return '<div class="userpic brround">'.$initials.'</div>';
+        return '<div class="userpic brround initials">'.$initials.'</div>';
       }
     } else {
       $domain_source = \SettingsSite::get('system_policy_domain_source');

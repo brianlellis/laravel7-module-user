@@ -205,12 +205,17 @@ class RapydUsergroups extends Controller
     return 'storage/USERGROUPS/PRODUCER/'.$producerFileName;
   }
 
-  public static function get_avatar($use_id = false)
+  public static function get_avatar($group_id = false)
   {
-    $user = self::show(request()->get('group')) ?: \Auth::user()->usergroup();
+    if(!$group_id && request()->get('group')) {
+      $group_id = request()->get('group');
+    }
+
+    $user = self::show($group_id) ?: \Auth::user()->usergroup();
     if($user) {
       if ($user->avatar) {
-        return '<img src="/'.$user->avatar.'" alt="User Avatar" class="userpic brround">';
+        $avatar_url = \Storage::disk('s3')->url($user->avatar);
+        return '<img src="'.$avatar_url.'" alt="User Avatar" class="userpic brround">';
       } else {
         $arr_check = explode(' ', $user->name);
         if (count($arr_check) > 1) {
@@ -232,9 +237,20 @@ class RapydUsergroups extends Controller
     if ($request->avatar) {
       $image        = $request->file('avatar');
       $image_name   = preg_replace('/\s+/', '', $image->getClientOriginalName());
-      // GREP FIX: Move file disk to s3 bucket
-      $image->move(public_path('usergroup/avatar'), $image_name);
-      Usergroups::find($request->usergroup)->update(['avatar' => '/usergroup/avatar/' . $image_name]);
+      $store        = \Storage::disk('s3')->put('user/avatar/' . $image_name, $image);
+      Usergroups::find($request->usergroup)->update(['avatar' => $store]);
+    }
+
+    return back();
+  }
+
+  public function avatar_remove(Request $request)
+  {
+    $usergroup = Usergroups::find($request->usergroup);
+
+    if($usergroup->avatar) {
+      \Storage::disk('s3')->delete($usergroup->avatar);
+      $usergroup->update(['avatar' => null]);
     }
 
     return back();
@@ -306,5 +322,23 @@ class RapydUsergroups extends Controller
     $usergroup->update($data);
 
     return back()->with(['success' => 'Overrode Producer Agreement']);
+  }
+
+  public static function producerSend($usergroup_id)
+  {
+    $usergroup = Usergroups::findOrFail($usergroup_id);
+
+    if(!$usergroup->email) {
+      return redirect(request()->getSchemeAndHttpHost() . "/admin/usergroups/profile?group={$usergroup_id}")
+              ->with('error', 'Agency Primary Email Required');
+    }
+
+    \RapydEvents::send_mail('complete_producer_agreement', [
+      'event_group_model_id'  => $usergroup->id,
+      'passed_email'          => $usergroup->email
+    ]);
+  
+    return redirect(request()->getSchemeAndHttpHost() . "/admin/usergroups/profile?group={$usergroup_id}")
+            ->with('success', 'Producer Agreement Sent');
   }
 }

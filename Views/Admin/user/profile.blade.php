@@ -66,7 +66,7 @@ $all_user_roles = \Spatie\Permission\Models\Role::all();
         <div class="card-body">
           <div class="text-center">
             <div class="userprofile">
-              @useravatar('use_id')
+              {!!\RapydUser::get_avatar($user->id)!!}
               <h3 class="mb-2 username text-dark">{{ $user->name_first }} {{ $user->name_last }}</h3>
 
               {{-- NOTE: PART OF USER GROUPS TO BE WORKED ON --}}
@@ -89,6 +89,11 @@ $all_user_roles = \Spatie\Permission\Models\Role::all();
             @csrf
             <input type="file" class="form-control form-control-sm" name="avatar" accept=".jpg,.jpeg,.png"
               id="avatar_file">
+          </form>
+          <form action="{{ route('rapyd.user.avatar.remove', ['user' => $user]) }}" method="POST">
+            @csrf
+            <button type="submit"
+              class="btn btn-block btn-primary mt-5 btn-sm font-weight-bold">Remove Avatar</button>
           </form>
         </div>
       </div>
@@ -603,7 +608,7 @@ $all_user_roles = \Spatie\Permission\Models\Role::all();
       @endif
     </div>
   </div>
-
+  
   <script src="/modules/User/Resources/Admin/js/user_profile.js"></script>
   <script>
     function copy_principal_to_card() {
@@ -712,3 +717,5 @@ $all_user_roles = \Spatie\Permission\Models\Role::all();
 
   </script>
 @endif
+
+@pageloading

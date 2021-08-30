@@ -111,11 +111,12 @@
               <div class="row">
                 {{-- LEFT SIDE BAR --}}
                 <div class="col-lg-3 col-md-12" id="col-left">
+                  
                   <div class="card">
                     <div class="card-body">
                       <div class="text-center">
                         <div class="userprofile">
-                          @usergroupavatar
+                          {!! \RapydUsergroups::get_avatar($usergroup->id) !!}
                           <h3 class="username text-dark mb-2">{{ $usergroup->name ?? '' }}</h3>
                         </div>
                       </div>
@@ -127,11 +128,17 @@
                           <input type="file" class="form-control form-control-sm"
                             name="avatar" accept=".jpg,.jpeg,.png" id="avatar_file">
                         </form>
+
+                        <form action="{{ route('rapyd.usergroup.avatar.remove', ['usergroup' => $usergroup]) }}" method="POST">
+                          @csrf
+                          <button type="submit"
+                            class="btn btn-block btn-primary mt-5 btn-sm font-weight-bold">Remove Avatar</button>
+                        </form>
                       </div>
                     </div>
                   </div>
 
-                  @include('rapyd_admin::widgets.shareable-wrapper', ['userId' => $usergroup->id])
+                  @include('rapyd_admin::widgets.shareable-wrapper', ['userId' => auth()->user()->id])
                 </div>
 
                 <div class="col-lg-9 col-md-12" id="col-right">
@@ -182,7 +189,6 @@
                               @endif
                             >
                           </div>
-
                           <div class="col-lg-6 col-md-12">
                             <div class="form-group">
                               <label for="exampleInputname">Name</label>
@@ -203,6 +209,17 @@
                                   value="{{ $usergroup->phone_main }}"
                                 @endif
                               >
+                            </div>
+                          </div>
+                          <div class="col-lg-6 col-md-12">
+                            <div class="form-group">
+                              <label>Primary Email</label>
+                              <input type="email" class="form-control" name="email"
+                                placeholder="email" 
+                                @if($usergroup->email)
+                                  value="{{ $usergroup->email }}"
+                                @endif
+                                >
                             </div>
                           </div>
                         </div>
@@ -332,29 +349,30 @@
                             </div>
                           </div>
                         </div>
-                        <div class="row">
-                          <div class="col-md-4 col-sm-12">
-                            <div class="form-group">
-
-                              <label class="form-label">Tax ID Format</label>
-                              <select name="tax_id_type" class="form-control">
-                                <option value="">Format Type ( ENI / SSN )</option>
-                                @foreach ($tax_id_type as $item)
-                                  <option value="{{ $item['value'] }}" @if ($usergroup && $usergroup->tax_id_type === $item['value']) selected @endif>
-                                    {{ $item['label'] }}</option>
-                                @endforeach
-                              </select>
+                        @can('edit-tax-id')
+                          <div class="row">
+                            <div class="col-md-4 col-sm-12">
+                              <div class="form-group">
+                                <label class="form-label">Tax ID Format</label>
+                                <select name="tax_id_type" class="form-control">
+                                  <option value="">Format Type ( ENI / SSN )</option>
+                                  @foreach ($tax_id_type as $item)
+                                    <option value="{{ $item['value'] }}" @if ($usergroup && $usergroup->tax_id_type === $item['value']) selected @endif>
+                                      {{ $item['label'] }}</option>
+                                  @endforeach
+                                </select>
+                              </div>
+                            </div>
+                            <div class="col-md-8 col-sm-12">
+                              <div class="form-group">
+                                <label class="form-label">Tax ID</label>
+                                <input name="tax_id" class="form-control"
+                                  placeholder="Tax ID"
+                                  value="{{ $usergroup->tax_id ?? old('tax_id') }}">
+                              </div>
                             </div>
                           </div>
-                          <div class="col-md-8 col-sm-12">
-                            <div class="form-group">
-                              <label class="form-label">Tax ID</label>
-                              <input name="tax_id" class="form-control"
-                                placeholder="Tax ID"
-                                value="{{ $usergroup->tax_id ?? old('tax_id') }}">
-                            </div>
-                          </div>
-                        </div>
+                        @endcan
                       </div>
 
 
@@ -722,6 +740,7 @@
                     @endif
 
                     {{-- AGENCY ATTACHED PAYMENT METHODS FROM AGENTS --}}
+                    
                     @foreach ($usergroup->users as $user)
                       @if ($user->authnet_id)
                         @php
@@ -946,3 +965,5 @@
   @if ($tour_check) window.guideChimp.start(); @endif
 
 </script>
+
+@pageloading

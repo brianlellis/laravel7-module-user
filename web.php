@@ -109,6 +109,7 @@ Route::name('rapyd.')->prefix('/api/')->middleware(['auth', 'verified'])->group(
   	Route::post('create',           '\Rapyd\RapydUser@store')->name('create');
   	Route::post('update',           '\Rapyd\RapydUser@update')->name('update');
   	Route::post('avatar',           '\Rapyd\RapydUser@avatar')->name('avatar');
+  	Route::post('avatar/remove', '\Rapyd\RapydUser@avatar_remove')->name('avatar.remove');
   	Route::get('delete/{user_id}',  '\Rapyd\RapydUser@destroy')->name('delete');
     Route::post('update-pass',      '\Rapyd\RapydUser@update_password')->name('update_pass');
 
@@ -129,6 +130,7 @@ Route::name('rapyd.')->prefix('/api/')->middleware(['auth', 'verified'])->group(
     $group = '\Rapyd\RapydUsergroups';
     Route::post('create',                         "{$group}@store")->name('create');
     Route::post('avatar',                         "{$group}@avatar")->name('avatar');
+    Route::post('avatar/remove',                  "{$group}@avatar_remove")->name('avatar.remove');
     Route::post('complete',                       "{$group}@complete")->name('complete');
     Route::post('update/{usergroup}',             "{$group}@update")->name('update');
     Route::post('delete/{usergroup}',             "{$group}@destroy")->name('delete');
@@ -138,6 +140,7 @@ Route::name('rapyd.')->prefix('/api/')->middleware(['auth', 'verified'])->group(
     Route::get('deactivate/{usergroup_id}',       "{$group}@deactivate")->name('deactivate');
     Route::get('activate/{usergroup_id}',         "{$group}@activate")->name('activate');
     Route::get('producer/override/{usergroup_id}',"{$group}@producerOverride")->name('producer.override');
+    Route::get('producer/send/{usergroup_id}',    "{$group}@producerSend")->name('producer.send');
   });
 });
 

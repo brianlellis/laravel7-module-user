@@ -15,7 +15,13 @@ class Register
     'email'             => 'required|email|unique:\App\User,email',
     'name_first'        => 'required',
     'name_last'         => 'required',
-    'phone_main'        => 'nullable'
+    'phone_main'        => 'nullable',
+    'address_street'    => 'nullable',
+    'address_street_2'  => 'nullable',
+    'address_city'      => 'nullable',
+    'address_state'     => 'nullable',
+    'address_zip'       => 'nullable',
+    'address_county'    => 'nullable',
   ];
 
   public function is_blocked_domain($email)
@@ -56,7 +62,6 @@ class Register
       \RapydUsergroups::add_user($request->usergroup_id, $user->id);
     }
 
-    $user = \App\User::find(6);
     if (self::is_blocked_domain($request->email)) {
       $user->assignRole($request->role_name ?? 'Unapproved User');
       \RapydEvents::send_mail('user_registered_blocked', [
@@ -68,11 +73,17 @@ class Register
       \RapydEvents::send_mail('user_registered_success', [
         'event_group_model_id'  => $user->id,
       ]);
-      $redirect     = '/registration-success';
+
+      // IF Agent Send Email To User To Create Password
+      if($request->role_name === 'Agent') { 
+        \RapydEvents::send_mail('user_approved', [
+          'event_group_model_id'  => $user->id,
+          'passed_user'			      => $user,
+        ]);
+      }
+
+      $redirect     = "/admin/usergroups/profile?group={$request->usergroup_id}&tab=Agents";
     }
-    \RapydEvents::send_mail($rapyd_event, [
-      'event_group_model_id'  => $user->id,
-    ]);
 
     \FullText::reindex_record('\\App\\User', $user->id);
     // CUSTOM ROUTES COULD BE DUE TO A NEED TO OVERRIDE REDIRECT
@@ -96,8 +107,10 @@ class Register
         'address_street_2'  => $request->address_street_2,
         'address_city'      => $request->address_city,
         'address_state'     => $request->address_state,
+        'address_county'    => $request->address_county,
         'address_zip'       => intval($request->address_zip),
         'usergroup_type_id' => UsergroupType::where('description', 'agency')->first()->id,
+        'phone_main'        => isset($data['phone_main']) ? preg_replace('/[^0-9]/', '', $data['phone_main']) : null
       ]);
     }
 
